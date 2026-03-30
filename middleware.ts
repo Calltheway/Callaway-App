@@ -24,7 +24,13 @@ export async function middleware(request: NextRequest) {
     },
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // Auth check failed (e.g. missing/invalid env vars) — treat as unauthenticated
+  }
   const path = request.nextUrl.pathname;
 
   // Redirect unauthenticated users away from protected routes
@@ -33,8 +39,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 
-  // Redirect authenticated users away from auth pages
-  if ((path === '/sign-in' || path === '/') && user) {
+  // Redirect authenticated users away from auth/landing pages
+  if (path === '/sign-in' && user) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 

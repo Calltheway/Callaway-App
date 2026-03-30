@@ -87,7 +87,7 @@ export default function LandingPage() {
                 step: '03',
                 icon: '💰',
                 title: 'Get your money back',
-                desc: 'Keeper shows you exactly what's wrong and either walks you through fixing it or handles it for you. You pay 20% of what we recover — nothing if we find nothing.',
+                desc: "Keeper shows you exactly what's wrong and either walks you through fixing it or handles it for you. You pay 20% of what we recover — nothing if we find nothing.",
               },
             ].map(({ step, icon, title, desc }) => (
               <div key={step} className="relative">

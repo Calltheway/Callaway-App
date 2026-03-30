@@ -4,13 +4,18 @@ import { getIssues } from '@/lib/db';
 import { Sidebar } from '@/components/layout/Sidebar';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) redirect('/sign-in');
-
-  const issues    = await getIssues(user.id);
-  const newCount  = issues.filter((i) => i.status === 'new').length;
+  let user = null;
+  let newCount = 0;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+    if (!user) redirect('/sign-in');
+    const issues = await getIssues(user.id);
+    newCount = issues.filter((i) => i.status === 'new').length;
+  } catch {
+    redirect('/sign-in');
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">

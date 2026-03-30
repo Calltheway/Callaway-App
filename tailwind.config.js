@@ -4,7 +4,6 @@ module.exports = {
     './app/**/*.{js,jsx,ts,tsx}',
     './components/**/*.{js,jsx,ts,tsx}',
   ],
-  presets: [require('nativewind/preset')],
   theme: {
     extend: {
       colors: {
@@ -44,7 +43,7 @@ module.exports = {
         border:  '#E4E8EF',
       },
       fontFamily: {
-        sans: ['System'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         '2xl': '16px',
