@@ -1,75 +1,32 @@
-// ─────────────────────────────────────────────
-// KEEPER — Badge Component
-// Status tags like "New", "In Progress", "Resolved"
-// ─────────────────────────────────────────────
-import React from 'react';
-import { View, Text } from 'react-native';
-import { StatusConfig } from '@/constants/theme';
+import { clsx } from 'clsx';
 import type { IssueStatus } from '@/types';
 
-interface StatusBadgeProps {
-  status: IssueStatus;
-  size?:  'sm' | 'md';
-}
+const STATUS_STYLES: Record<IssueStatus, string> = {
+  new:         'bg-blue-50 text-blue-700',
+  in_progress: 'bg-amber-50 text-amber-700',
+  resolved:    'bg-emerald-50 text-emerald-700',
+  dismissed:   'bg-slate-100 text-slate-500',
+};
 
-export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
-  const config = StatusConfig[status];
-  const isSmall = size === 'sm';
+const STATUS_LABELS: Record<IssueStatus, string> = {
+  new:         'New',
+  in_progress: 'In Progress',
+  resolved:    'Resolved',
+  dismissed:   'Dismissed',
+};
 
+export function StatusBadge({ status }: { status: IssueStatus }) {
   return (
-    <View
-      style={{
-        backgroundColor:  config.bg,
-        borderRadius:     100,
-        paddingHorizontal: isSmall ? 8 : 12,
-        paddingVertical:   isSmall ? 3 : 5,
-        alignSelf:        'flex-start',
-      }}
-    >
-      <Text
-        style={{
-          color:      config.color,
-          fontSize:   isSmall ? 11 : 12,
-          fontWeight: '600',
-          letterSpacing: 0.3,
-        }}
-      >
-        {config.label}
-      </Text>
-    </View>
+    <span className={clsx('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold', STATUS_STYLES[status])}>
+      {STATUS_LABELS[status]}
+    </span>
   );
 }
 
-// ── Generic colored badge ─────────────────────
-interface BadgeProps {
-  label:  string;
-  color:  string;
-  bg:     string;
-  size?:  'sm' | 'md';
-}
-
-export function Badge({ label, color, bg, size = 'md' }: BadgeProps) {
-  const isSmall = size === 'sm';
+export function Badge({ label, className }: { label: string; className?: string }) {
   return (
-    <View
-      style={{
-        backgroundColor:   bg,
-        borderRadius:      100,
-        paddingHorizontal: isSmall ? 8 : 12,
-        paddingVertical:   isSmall ? 3 : 5,
-        alignSelf:         'flex-start',
-      }}
-    >
-      <Text
-        style={{
-          color,
-          fontSize:     isSmall ? 11 : 12,
-          fontWeight:   '600',
-          letterSpacing: 0.3,
-        }}
-      >
-        {label}
-      </Text>
-    </View>
+    <span className={clsx('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold', className)}>
+      {label}
+    </span>
   );
 }

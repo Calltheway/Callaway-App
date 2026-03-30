@@ -1,52 +1,23 @@
-// ─────────────────────────────────────────────
-// KEEPER — Card Component
-// ─────────────────────────────────────────────
-import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  type ViewStyle,
-  type TouchableOpacityProps,
-} from 'react-native';
-import { Colors, BorderRadius, Shadow } from '@/constants/theme';
+import { type HTMLAttributes } from 'react';
+import { clsx } from 'clsx';
 
-interface CardProps {
-  children:    React.ReactNode;
-  style?:      ViewStyle;
-  onPress?:    TouchableOpacityProps['onPress'];
-  padding?:    number;
-  shadow?:     keyof typeof Shadow;
-  borderColor?: string;
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  padding?: 'sm' | 'md' | 'lg';
 }
 
-export function Card({
-  children,
-  style,
-  onPress,
-  padding    = 16,
-  shadow     = 'md',
-  borderColor,
-}: CardProps) {
-  const cardStyle: ViewStyle = {
-    backgroundColor: Colors.white,
-    borderRadius:    BorderRadius.lg,
-    padding,
-    ...Shadow[shadow],
-    ...(borderColor ? { borderWidth: 1, borderColor } : {}),
-    ...style,
-  };
+const paddings = { sm: 'p-4', md: 'p-6', lg: 'p-8' };
 
-  if (onPress) {
-    return (
-      <TouchableOpacity
-        onPress={onPress}
-        activeOpacity={0.9}
-        style={cardStyle}
-      >
-        {children}
-      </TouchableOpacity>
-    );
-  }
-
-  return <View style={cardStyle}>{children}</View>;
+export function Card({ padding = 'md', className, children, ...rest }: CardProps) {
+  return (
+    <div
+      className={clsx(
+        'bg-white rounded-2xl shadow-sm border border-slate-100',
+        paddings[padding],
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
 }

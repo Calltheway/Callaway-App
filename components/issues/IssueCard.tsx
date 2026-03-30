@@ -1,132 +1,72 @@
-// ─────────────────────────────────────────────
-// KEEPER — Issue Card
-// Shown in the issues feed. Each card represents
-// one money problem Keeper found.
-// ─────────────────────────────────────────────
-import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
-import * as Haptics from 'expo-haptics';
+import Link from 'next/link';
+import { ChevronRight } from 'lucide-react';
 import { StatusBadge } from '@/components/ui/Badge';
-import { Colors, FontSize, FontWeight, BorderRadius, Shadow, IssueTypeConfig, ActionConfig } from '@/constants/theme';
 import type { DetectedIssue } from '@/types';
 
-interface IssueCardProps {
-  issue: DetectedIssue;
-}
+const ISSUE_COLORS: Record<string, string> = {
+  forgotten_subscription: 'bg-red-50 border-red-200',
+  price_increase:         'bg-orange-50 border-orange-200',
+  duplicate_charge:       'bg-red-50 border-red-200',
+  unused_subscription:    'bg-orange-50 border-orange-200',
+  overpriced_service:     'bg-amber-50 border-amber-200',
+  unclaimed_refund:       'bg-emerald-50 border-emerald-200',
+  warranty_expiring:      'bg-blue-50 border-blue-200',
+  billing_error:          'bg-red-50 border-red-200',
+  free_trial_ending:      'bg-purple-50 border-purple-200',
+};
 
-export function IssueCard({ issue }: IssueCardProps) {
-  const config       = IssueTypeConfig[issue.issue_type];
-  const actionConfig = ActionConfig[issue.recommended_action];
+const ISSUE_LABELS: Record<string, string> = {
+  forgotten_subscription: 'Forgotten Subscription',
+  price_increase:         'Price Increase',
+  duplicate_charge:       'Duplicate Charge',
+  unused_subscription:    'Unused Subscription',
+  overpriced_service:     'Overpriced Service',
+  unclaimed_refund:       'Unclaimed Refund',
+  warranty_expiring:      'Warranty Expiring',
+  billing_error:          'Billing Error',
+  free_trial_ending:      'Free Trial Ending',
+};
 
-  const handlePress = async () => {
-    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    router.push(`/issue/${issue.id}`);
-  };
+const DIFFICULTY_LABEL: Record<string, string> = {
+  easy:   '✓ Easy fix',
+  medium: '~ 5 min',
+  hard:   '○ Takes effort',
+};
 
-  const formatMoney = (n: number) =>
+export function IssueCard({ issue }: { issue: DetectedIssue }) {
+  const fmt = (n: number) =>
     n.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 });
 
+  const cardColor = ISSUE_COLORS[issue.issue_type] ?? 'bg-white border-slate-200';
+
   return (
-    <TouchableOpacity
-      onPress={handlePress}
-      activeOpacity={0.92}
-      style={{
-        backgroundColor: Colors.white,
-        borderRadius:    BorderRadius.lg,
-        padding:         16,
-        marginBottom:    12,
-        ...Shadow.sm,
-        // Subtle left border color-coded by issue urgency
-        borderLeftWidth: 3,
-        borderLeftColor: config.color,
-      }}
-      accessibilityRole="button"
-      accessibilityLabel={`${issue.merchant_name} issue, ${formatMoney(issue.monthly_cost)} per month`}
-    >
-      {/* Top row: merchant name + cost */}
-      <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <View style={{ flex: 1, marginRight: 12 }}>
-          <Text
-            style={{
-              fontSize:   FontSize.md,
-              fontWeight: FontWeight.semibold,
-              color:      Colors.textPrimary,
-            }}
-            numberOfLines={1}
-          >
-            {issue.merchant_name}
-          </Text>
-          <Text
-            style={{
-              fontSize:  FontSize.sm,
-              color:     Colors.textSecondary,
-              marginTop: 2,
-            }}
-          >
-            {config.label}
-          </Text>
-        </View>
+    <Link href={`/issues/${issue.id}`}>
+      <div className={`border rounded-2xl p-5 hover:shadow-md transition-shadow cursor-pointer ${cardColor}`}>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="font-semibold text-navy-900 truncate">{issue.merchant_name}</h3>
+              <StatusBadge status={issue.status} />
+            </div>
+            <p className="text-xs text-slate-500 mb-2">{ISSUE_LABELS[issue.issue_type]}</p>
+            <p className="text-sm text-slate-600 line-clamp-2 leading-relaxed">
+              {issue.plain_english_explanation}
+            </p>
+          </div>
 
-        <View style={{ alignItems: 'flex-end', gap: 6 }}>
-          <Text
-            style={{
-              fontSize:   FontSize.md,
-              fontWeight: FontWeight.bold,
-              color:      config.color,
-            }}
-          >
-            {formatMoney(issue.monthly_cost)}/mo
-          </Text>
-          <StatusBadge status={issue.status} size="sm" />
-        </View>
-      </View>
+          <div className="flex flex-col items-end gap-2 shrink-0">
+            <p className="text-lg font-black text-red-600">{fmt(issue.monthly_cost)}<span className="text-xs font-normal text-slate-400">/mo</span></p>
+            <p className="text-xs text-slate-400">{fmt(issue.annual_cost)}/yr</p>
+          </div>
+        </div>
 
-      {/* Explanation */}
-      <Text
-        style={{
-          fontSize:   FontSize.sm,
-          color:      Colors.textSecondary,
-          marginTop:  10,
-          lineHeight: 20,
-        }}
-        numberOfLines={2}
-      >
-        {issue.plain_english_explanation}
-      </Text>
-
-      {/* Bottom row: action + annual cost */}
-      <View
-        style={{
-          flexDirection:  'row',
-          alignItems:     'center',
-          justifyContent: 'space-between',
-          marginTop:      12,
-          paddingTop:     12,
-          borderTopWidth: 1,
-          borderTopColor: Colors.border,
-        }}
-      >
-        <View
-          style={{
-            flexDirection:     'row',
-            alignItems:        'center',
-            gap:               6,
-            backgroundColor:   `${actionConfig.color}15`,
-            borderRadius:      BorderRadius.full,
-            paddingHorizontal: 10,
-            paddingVertical:   5,
-          }}
-        >
-          <Text style={{ fontSize: FontSize.xs, fontWeight: FontWeight.semibold, color: actionConfig.color }}>
-            {actionConfig.label}
-          </Text>
-        </View>
-
-        <Text style={{ fontSize: FontSize.xs, color: Colors.textTertiary }}>
-          {formatMoney(issue.annual_cost)} / year
-        </Text>
-      </View>
-    </TouchableOpacity>
+        <div className="mt-4 pt-3 border-t border-black/5 flex items-center justify-between">
+          <span className="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">
+            {DIFFICULTY_LABEL[issue.action_difficulty]}
+          </span>
+          <ChevronRight size={16} className="text-slate-400" />
+        </div>
+      </div>
+    </Link>
   );
 }
