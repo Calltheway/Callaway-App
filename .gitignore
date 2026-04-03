@@ -1,6 +1,8 @@
 node_modules/
 .expo/
 dist/
+.next/
+tsconfig.tsbuildinfo
 web-build/
 .env
 *.jks
