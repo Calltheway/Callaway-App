@@ -1,7 +1,8 @@
+// Legacy file - not used in Unhooked app
+export {};
+/*
 // ─────────────────────────────────────────────
-// KEEPER — Biometric Authentication
-// Wraps Face ID / Touch ID / Fingerprint.
-// Used to unlock the app and confirm sensitive actions.
+// KEEPER — Biometric Authentication (legacy)
 // ─────────────────────────────────────────────
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as SecureStore from 'expo-secure-store';
@@ -100,3 +101,4 @@ export async function isBiometricEnrolled(): Promise<boolean> {
   const val = await SecureStore.getItemAsync(BIOMETRIC_ENROLLED_KEY);
   return val === '1';
 }
+*/

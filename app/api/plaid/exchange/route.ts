@@ -19,14 +19,13 @@ export async function POST(req: NextRequest) {
     const account = await createAccount({
       user_id:          user.id,
       plaid_item_id:    item_id,
-      plaid_access_token: access_token,
       institution_name,
       account_name:     account_name ?? institution_name,
       account_type:     account_type ?? 'checking',
       mask,
       last_synced:      new Date().toISOString(),
       is_active:        true,
-    });
+    } as Parameters<typeof createAccount>[0]);
 
     // Sync 90 days of transactions
     const transactions = await fetchTransactions(access_token, account.id, user.id);
