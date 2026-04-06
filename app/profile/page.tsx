@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useUnhookedStore, LEVEL_NAMES, LEVEL_XP_THRESHOLDS } from '@/store/useUnhookedStore';
+import { useDopamindStore, LEVEL_NAMES, LEVEL_XP_THRESHOLDS } from '@/store/useDopamindStore';
 import { getSupabaseBrowser } from '@/lib/supabase';
 import BottomNav from '@/components/BottomNav';
 import { ArrowLeft, Shield, Star, LogOut, Zap, Crown, AlertTriangle } from 'lucide-react';
@@ -18,7 +18,7 @@ const ACHIEVEMENTS = [
 
 export default function ProfilePage() {
   const router = useRouter();
-  const store = useUnhookedStore();
+  const store = useDopamindStore();
   const {
     userName, streakDays, xpTotal, level, isPremium,
     epilepsySafeMode, setEpilepsySafeMode,
@@ -209,7 +209,7 @@ export default function ProfilePage() {
         </button>
 
         <p className="text-center text-xs text-gray-700">
-          Unhooked v1.0 · Not a substitute for professional medical advice
+          Dopamind v1.0 · Not a substitute for professional medical advice
         </p>
       </div>
 

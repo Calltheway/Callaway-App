@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 import { ArrowLeft, Camera, CameraOff, Heart } from 'lucide-react';
 import XPToast from '@/components/XPToast';
 
@@ -18,7 +18,7 @@ const BREATH_SEQUENCE: { phase: BreathPhase; duration: number; label: string }[]
 
 export default function HRVPage() {
   const router = useRouter();
-  const { addXP } = useUnhookedStore();
+  const { addXP } = useDopamindStore();
 
   const [phase, setPhase] = useState<Phase>('idle');
   const [cameraError, setCameraError] = useState('');

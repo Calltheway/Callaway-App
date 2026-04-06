@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 
 export default function StreakCounter() {
-  const { streakDays, streakHours, streakMinutes, streakSeconds, tickStreak, sobrietyStartDate } = useUnhookedStore();
+  const { streakDays, streakHours, streakMinutes, streakSeconds, tickStreak, sobrietyStartDate } = useDopamindStore();
 
   useEffect(() => {
     if (!sobrietyStartDate) return;

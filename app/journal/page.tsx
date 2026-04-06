@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 import { getSupabaseBrowser } from '@/lib/supabase';
 import { ArrowLeft, Plus, Brain, ChevronDown, ChevronUp } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
@@ -36,7 +36,7 @@ const PROMPTS_BY_STAGE = [
 
 export default function JournalPage() {
   const router = useRouter();
-  const { streakDays, userId, addXP } = useUnhookedStore();
+  const { streakDays, userId, addXP } = useDopamindStore();
 
   const [view, setView] = useState<'checkin' | 'entries'>('checkin');
   const [mood, setMood] = useState(5);

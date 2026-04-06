@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 import { getSupabaseBrowser } from '@/lib/supabase';
 import { CheckCircle, ArrowRight, ArrowLeft, AlertTriangle, Brain, Zap, Heart, Eye, Shield } from 'lucide-react';
 
@@ -38,7 +38,7 @@ const HABIT_TYPES = [
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const store = useUnhookedStore();
+  const store = useDopamindStore();
 
   const [step, setStep] = useState(1);
   const [ageConfirmed, setAgeConfirmed] = useState(false);
@@ -181,7 +181,7 @@ export default function OnboardingPage() {
 
             <div className="bg-yellow-900/20 border border-yellow-800/50 rounded-2xl p-4">
               <p className="text-yellow-400 text-xs leading-relaxed">
-                <strong>Medical Disclaimer:</strong> Unhooked is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical conditions. If you are in crisis, call 988 (Suicide & Crisis Lifeline) or 911.
+                <strong>Medical Disclaimer:</strong> Dopamind is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical conditions. If you are in crisis, call 988 (Suicide & Crisis Lifeline) or 911.
               </p>
             </div>
           </div>
@@ -201,7 +201,7 @@ export default function OnboardingPage() {
             <div className="bg-yellow-900/20 border border-yellow-600/50 rounded-2xl p-5 space-y-3">
               <p className="text-yellow-300 font-bold text-sm">⚠️ Important: Read before proceeding</p>
               <p className="text-gray-300 text-sm leading-relaxed">
-                Unhooked's brainwave entrainment features include <strong>screen pulse effects</strong> and <strong>visual flashing patterns</strong> at various frequencies. These effects are designed to support neural entrainment but may not be suitable for everyone.
+                Dopamind's brainwave entrainment features include <strong>screen pulse effects</strong> and <strong>visual flashing patterns</strong> at various frequencies. These effects are designed to support neural entrainment but may not be suitable for everyone.
               </p>
               <p className="text-gray-300 text-sm leading-relaxed">
                 Do NOT use the visual entrainment features if you have:

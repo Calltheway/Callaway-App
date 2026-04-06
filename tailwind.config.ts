@@ -8,7 +8,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        unhooked: {
+        dopamind: {
           navy:   '#0A0E1A',
           teal:   '#00D4FF',
           gold:   '#FFD700',

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 import { getSupabaseBrowser } from '@/lib/supabase';
 import BottomNav from '@/components/BottomNav';
 import { ArrowLeft, Heart, Plus, Trophy, Users } from 'lucide-react';
@@ -33,7 +33,7 @@ const WEEKLY_LEADERS = [
 
 export default function CommunityPage() {
   const router = useRouter();
-  const { isPremium, streakDays, userId } = useUnhookedStore();
+  const { isPremium, streakDays, userId } = useDopamindStore();
 
   const [posts, setPosts] = useState<CommunityPost[]>(DEMO_POSTS);
   const [newPost, setNewPost] = useState('');

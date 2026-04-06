@@ -3,11 +3,11 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseBrowser } from '@/lib/supabase';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 
 export default function RootPage() {
   const router = useRouter();
-  const { onboardingComplete } = useUnhookedStore();
+  const { onboardingComplete } = useDopamindStore();
 
   useEffect(() => {
     async function checkAuth() {
@@ -38,7 +38,7 @@ export default function RootPage() {
         <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/30 flex items-center justify-center animate-pulse">
           <span className="text-3xl font-black text-[#00D4FF]">U</span>
         </div>
-        <h1 className="text-2xl font-bold text-white mb-2">Unhooked</h1>
+        <h1 className="text-2xl font-bold text-white mb-2">Dopamind</h1>
         <p className="text-gray-400 text-sm">Loading your journey...</p>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 import { ArrowLeft, Waves, Wind, Dumbbell, Zap } from 'lucide-react';
 import XPToast from '@/components/XPToast';
 
@@ -10,7 +10,7 @@ type InterventionId = 'brainwave' | 'hrv' | 'pushups' | 'pattern';
 
 export default function SOSPage() {
   const router = useRouter();
-  const { epilepsySafeMode, addXP } = useUnhookedStore();
+  const { epilepsySafeMode, addXP } = useDopamindStore();
 
   const [active, setActive] = useState<InterventionId | null>(null);
   const [completed, setCompleted] = useState(false);

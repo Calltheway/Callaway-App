@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     const { name = 'Warrior', streakDays = 0, habitType = 'habit', motivations = [], recentJournal = '' } = userContext || {};
 
-    const systemPrompt = `You are an expert recovery coach for Unhooked, a premium habit recovery app. You specialize in evidence-based approaches to addiction recovery including:
+    const systemPrompt = `You are an expert recovery coach for Dopamind, a premium habit recovery app. You specialize in evidence-based approaches to addiction recovery including:
 - Neuroplasticity and brain rewiring science
 - CBT (Cognitive Behavioral Therapy) for habit change
 - ACT (Acceptance and Commitment Therapy)

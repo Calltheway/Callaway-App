@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 import { ArrowLeft, Play, Square, Volume2, VolumeX } from 'lucide-react';
 import XPToast from '@/components/XPToast';
 
@@ -106,7 +106,7 @@ function drawMandala(
 function BrainwaveInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { epilepsySafeMode, addXP, userId } = useUnhookedStore();
+  const { epilepsySafeMode, addXP, userId } = useDopamindStore();
 
   const initialMode = searchParams.get('mode') || 'theta';
   const [selectedMode, setSelectedMode] = useState(initialMode);

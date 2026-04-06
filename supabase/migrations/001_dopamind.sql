@@ -1,4 +1,4 @@
--- Unhooked App Database Schema
+-- Dopamind App Database Schema
 -- Full schema with RLS policies
 
 -- profiles table (extends Supabase auth.users)

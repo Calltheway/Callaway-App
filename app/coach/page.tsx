@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 import { ArrowLeft, Send, Zap } from 'lucide-react';
 import BottomNav from '@/components/BottomNav';
 
@@ -30,7 +30,7 @@ function getOpeningMessage(userName: string | null, streakDays: number): string 
 
 export default function CoachPage() {
   const router = useRouter();
-  const { userName, streakDays, habitType, motivations } = useUnhookedStore();
+  const { userName, streakDays, habitType, motivations } = useDopamindStore();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');

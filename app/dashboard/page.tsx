@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUnhookedStore, LEVEL_NAMES, LEVEL_XP_THRESHOLDS } from '@/store/useUnhookedStore';
+import { useDopamindStore, LEVEL_NAMES, LEVEL_XP_THRESHOLDS } from '@/store/useDopamindStore';
 import StreakCounter from '@/components/StreakCounter';
 import BrainHealingMap from '@/components/BrainHealingMap';
 import BottomNav from '@/components/BottomNav';
@@ -20,7 +20,7 @@ const BENEFITS = [
 
 export default function DashboardPage() {
   const router = useRouter();
-  const store = useUnhookedStore();
+  const store = useDopamindStore();
   const { streakDays, userName, xpTotal, level, isPremium, sobrietyStartDate, addXP } = store;
 
   const [showRelapse, setShowRelapse] = useState(false);

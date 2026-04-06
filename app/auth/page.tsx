@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseBrowser } from '@/lib/supabase';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 import { Mail, ArrowRight, Zap, Shield, Brain } from 'lucide-react';
 
 export default function AuthPage() {
   const router  = useRouter();
-  const store   = useUnhookedStore();
+  const store   = useDopamindStore();
   const [email, setEmail]   = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent]     = useState(false);
@@ -78,7 +78,7 @@ export default function AuthPage() {
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00D4FF]/20 to-[#00D4FF]/5 border border-[#00D4FF]/30 flex items-center justify-center">
             <span className="text-3xl font-black text-[#00D4FF]">U</span>
           </div>
-          <h1 className="text-4xl font-black text-white mb-2">Unhooked</h1>
+          <h1 className="text-4xl font-black text-white mb-2">Dopamind</h1>
           <p className="text-gray-400 text-lg">Break free. Rewire your brain.</p>
         </div>
 

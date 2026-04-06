@@ -30,7 +30,7 @@ export interface RelapseLog {
   timestamp: string;
 }
 
-export interface UnhookedState {
+export interface DopamindState {
   // User profile
   userId: string | null;
   userName: string | null;
@@ -63,7 +63,7 @@ export interface UnhookedState {
   relapseLog: RelapseLog[];
 
   // Actions
-  setUserProfile: (profile: Partial<UnhookedState>) => void;
+  setUserProfile: (profile: Partial<DopamindState>) => void;
   addXP: (amount: number) => void;
   setEpilepsySafeMode: (val: boolean) => void;
   markEpilepsyWarningShown: () => void;
@@ -73,7 +73,7 @@ export interface UnhookedState {
   signOut: () => void;
 }
 
-export const useUnhookedStore = create<UnhookedState>()(
+export const useDopamindStore = create<DopamindState>()(
   persist(
     (set, get) => ({
       // Defaults
@@ -164,7 +164,7 @@ export const useUnhookedStore = create<UnhookedState>()(
         }),
     }),
     {
-      name: 'unhooked-store',
+      name: 'dopamind-store',
       partialize: (state) => ({
         userId:                 state.userId,
         userName:               state.userName,

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { X, Heart } from 'lucide-react';
-import { useUnhookedStore } from '@/store/useUnhookedStore';
+import { useDopamindStore } from '@/store/useDopamindStore';
 import { getSupabaseBrowser } from '@/lib/supabase';
 
 interface RelapseModalProps {
@@ -15,7 +15,7 @@ const TRIGGERS = [
 ];
 
 export default function RelapseModal({ onClose }: RelapseModalProps) {
-  const { logRelapse, userId } = useUnhookedStore();
+  const { logRelapse, userId } = useDopamindStore();
   const [trigger, setTrigger] = useState('');
   const [mood, setMood] = useState(5);
   const [note, setNote] = useState('');

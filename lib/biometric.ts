@@ -1,4 +1,4 @@
-// Legacy file - not used in Unhooked app
+// Legacy file - not used in Dopamind app
 export {};
 /*
 // ─────────────────────────────────────────────

@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Unhooked — Break Free, Rewire Your Brain',
+  title: 'Dopamind — Break Free, Rewire Your Brain',
   description: 'Premium habit recovery app using brainwave entrainment, HRV breathwork, and AI coaching to help you break free from addictive patterns.',
   icons: { icon: '/favicon.ico' },
   manifest: '/manifest.json',
