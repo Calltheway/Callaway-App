@@ -4,8 +4,28 @@
 @tailwind utilities;
 
 @layer base {
-  html { font-family: 'Inter', system-ui, sans-serif; }
-  body { @apply bg-slate-50 text-navy-900; }
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: #0A0E1A;
+  }
+  body {
+    @apply bg-[#0A0E1A] text-white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0E1A;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1E2A3A;
+    border-radius: 2px;
+  }
 }
 
 @layer utilities {
@@ -15,4 +35,61 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .glow-teal {
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4), 0 0 30px rgba(0, 212, 255, 0.2);
+  }
+
+  .glow-gold {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2);
+  }
+
+  .text-glow-teal {
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 20px rgba(0, 212, 255, 0.4);
+  }
+
+  .text-glow-gold {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.4);
+  }
+
+  .card-dark {
+    @apply bg-[#111827] border border-[#1E2A3A] rounded-2xl;
+  }
+
+  .btn-primary {
+    @apply bg-[#00D4FF] text-[#0A0E1A] font-bold rounded-xl hover:bg-[#00B8E0] transition-all active:scale-95;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl transition-all active:scale-95;
+  }
+}
+
+@keyframes streakPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes neural-glow {
+  0%, 100% { stroke-opacity: 0.3; filter: drop-shadow(0 0 2px currentColor); }
+  50% { stroke-opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
+}
+
+@keyframes xp-float {
+  0% { opacity: 0; transform: translateY(0); }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-60px); }
+}
+
+.neural-path {
+  animation: neural-glow 3s ease-in-out infinite;
+}
+
+.xp-toast {
+  animation: xp-float 2.5s ease-out forwards;
+}
+
+.breathing-circle {
+  transition: transform 0.1s ease-in-out;
 }

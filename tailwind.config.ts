@@ -8,23 +8,32 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        navy: {
-          50:  '#E8ECF5',
-          100: '#C5CFDF',
-          500: '#2E4783',
-          700: '#152450',
-          900: '#0F1C3F',
-          950: '#0A1229',
-        },
-        emerald: {
-          400: '#33D0A4',
-          500: '#00C48C',
-          600: '#00A370',
-          700: '#006F47',
+        unhooked: {
+          navy:   '#0A0E1A',
+          teal:   '#00D4FF',
+          gold:   '#FFD700',
+          dark:   '#060912',
+          card:   '#111827',
+          border: '#1E2A3A',
         },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'glow':       'glow 2s ease-in-out infinite alternate',
+        'float':      'float 6s ease-in-out infinite',
+      },
+      keyframes: {
+        glow: {
+          from: { boxShadow: '0 0 10px #00D4FF, 0 0 20px #00D4FF' },
+          to:   { boxShadow: '0 0 20px #00D4FF, 0 0 40px #00D4FF, 0 0 60px #00D4FF' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%':      { transform: 'translateY(-10px)' },
+        },
       },
     },
   },
