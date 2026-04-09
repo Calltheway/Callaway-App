@@ -33,13 +33,36 @@ export default function RootPage() {
   }, [router, onboardingComplete]);
 
   return (
-    <div className="min-h-screen bg-[#0A0E1A] flex items-center justify-center">
-      <div className="text-center">
-        <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/30 flex items-center justify-center animate-pulse">
-          <span className="text-3xl font-black text-[#00D4FF]">U</span>
+    <div className="min-h-screen bg-[#050810] flex items-center justify-center relative overflow-hidden">
+      {/* Background glow orbs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-64 h-64 bg-cyan-500/8 rounded-full blur-3xl" />
+      </div>
+
+      <div className="text-center relative z-10 animate-fade-in">
+        {/* Logo */}
+        <div className="relative mx-auto mb-6 w-24 h-24">
+          <div className="w-24 h-24 rounded-2xl gradient-primary flex items-center justify-center animate-pulse-glow">
+            <span className="text-4xl font-black text-white tracking-tighter">D</span>
+          </div>
+          {/* Spinning ring */}
+          <div className="absolute inset-[-4px] rounded-[20px] border-2 border-transparent animate-spin-slow"
+            style={{ background: 'linear-gradient(#050810, #050810) padding-box, linear-gradient(135deg, rgba(124,58,237,0.6), rgba(0,212,255,0.6)) border-box' }}
+          />
         </div>
-        <h1 className="text-2xl font-bold text-white mb-2">Dopamind</h1>
-        <p className="text-gray-400 text-sm">Loading your journey...</p>
+
+        <h1 className="text-3xl font-black mb-1">
+          <span className="gradient-text">Dopamind</span>
+        </h1>
+        <p className="text-[#94A3B8] text-sm font-medium tracking-wider uppercase">Rewire. Reclaim. Rise.</p>
+
+        {/* Loading indicator */}
+        <div className="mt-8 flex items-center justify-center gap-2">
+          <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: '0ms' }} />
+          <div className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: '150ms' }} />
+          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+        </div>
       </div>
     </div>
   );
