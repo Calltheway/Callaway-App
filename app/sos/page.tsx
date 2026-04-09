@@ -79,27 +79,55 @@ export default function SOSPage() {
 
   if (completed) {
     return (
-      <div className="min-h-screen bg-[#0A0E1A] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-[#050810] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
         {xpToast && <XPToast amount={xpToast.amount} label={xpToast.label} onDone={() => setXpToast(null)} />}
-        <div className="text-6xl mb-6 animate-bounce">🏆</div>
-        <h1 className="text-3xl font-black text-white mb-3">Urge Defeated!</h1>
-        <p className="text-[#00D4FF] font-bold text-lg mb-4">+25 XP Earned</p>
-        <p className="text-gray-400 text-sm leading-relaxed mb-8 max-w-xs">
-          You faced the urge and chose your values. That's what warriors do. Every win rewires your brain.
-        </p>
-        <div className="space-y-3 w-full max-w-xs">
-          <button
-            onClick={() => router.push('/dashboard')}
-            className="w-full bg-[#00D4FF] text-[#0A0E1A] font-bold py-4 rounded-2xl hover:bg-[#00B8E0] transition-all"
-          >
-            Back to Dashboard
-          </button>
-          <button
-            onClick={() => router.push('/journal')}
-            className="w-full border border-[#1E2A3A] text-gray-300 py-3 rounded-2xl hover:border-gray-500 transition-all text-sm"
-          >
-            Log what happened
-          </button>
+        {/* CSS confetti dots */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 rounded-full"
+              style={{
+                left: `${(i * 17 + 5) % 100}%`,
+                top: '-10px',
+                background: i % 3 === 0 ? '#7C3AED' : i % 3 === 1 ? '#00D4FF' : '#F59E0B',
+                animation: `confetti-fall ${1.5 + (i % 5) * 0.4}s ease-in ${i * 0.12}s forwards`,
+              }}
+            />
+          ))}
+        </div>
+        <div className="relative z-10 animate-scale-in">
+          <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-emerald-600 to-cyan-500 flex items-center justify-center"
+            style={{ boxShadow: '0 0 40px rgba(16,185,129,0.5), 0 0 80px rgba(16,185,129,0.2)' }}>
+            <span className="text-4xl">🏆</span>
+          </div>
+          <h1 className="text-5xl font-black text-white mb-2 leading-none">Urge Defeated</h1>
+          <p className="gradient-text font-black text-xl mb-2">+25 XP Earned</p>
+
+          {/* Streak protected badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-2 glass border-emerald-500/30 rounded-full mb-6 mt-2">
+            <span className="text-emerald-400 text-sm font-bold">Streak Protected</span>
+            <span className="text-emerald-400">✓</span>
+          </div>
+
+          <p className="text-[#94A3B8] text-sm leading-relaxed mb-8 max-w-xs">
+            You faced the urge and chose your values. That&apos;s what warriors do. Every win rewires your brain permanently.
+          </p>
+          <div className="space-y-3 w-full max-w-xs">
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="w-full btn-primary py-4 text-base"
+              style={{ boxShadow: '0 0 30px rgba(124,58,237,0.4)' }}
+            >
+              Back to Dashboard
+            </button>
+            <button
+              onClick={() => router.push('/journal')}
+              className="w-full btn-secondary py-3.5 text-sm"
+            >
+              Log what happened
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -135,45 +163,46 @@ export default function SOSPage() {
   // Pushup challenge
   if (active === 'pushups') {
     return (
-      <div className="min-h-screen bg-[#0A0E1A] flex flex-col items-center justify-center p-6 text-center">
-        <h1 className="text-2xl font-black text-white mb-2">Physical Snap</h1>
-        <p className="text-gray-400 text-sm mb-8">Channel that energy into your body</p>
+      <div className="min-h-screen bg-[#050810] flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-orange-600/5 rounded-full blur-3xl" />
+        </div>
+        <h1 className="text-3xl font-black text-white mb-2 relative z-10">Physical Snap</h1>
+        <p className="text-[#94A3B8] text-sm mb-8 relative z-10">Channel that energy into your body</p>
 
-        <div className="relative w-48 h-48 mb-8">
-          <svg className="w-full h-full -rotate-90">
-            <circle cx="96" cy="96" r="88" fill="none" stroke="#1E2A3A" strokeWidth="8" />
+        <div className="relative w-52 h-52 mb-8 z-10">
+          <svg className="w-full h-full -rotate-90" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
             <circle
-              cx="96" cy="96" r="88" fill="none"
-              stroke="#00D4FF" strokeWidth="8"
+              cx="100" cy="100" r="90" fill="none"
+              stroke="url(#pushupGrad)" strokeWidth="8"
               strokeLinecap="round"
-              strokeDasharray={`${2 * Math.PI * 88}`}
-              strokeDashoffset={`${2 * Math.PI * 88 * (1 - pushupCount / 20)}`}
+              strokeDasharray={`${2 * Math.PI * 90}`}
+              strokeDashoffset={`${2 * Math.PI * 90 * (1 - pushupCount / 20)}`}
               className="transition-all duration-300"
             />
+            <defs>
+              <linearGradient id="pushupGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#f97316" />
+                <stop offset="100%" stopColor="#ef4444" />
+              </linearGradient>
+            </defs>
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-5xl font-black text-white">{pushupCount}</span>
-            <span className="text-gray-400 text-sm">/ 20</span>
+            <span className="text-6xl font-black text-white">{pushupCount}</span>
+            <span className="text-[#94A3B8] text-sm">/ 20</span>
           </div>
         </div>
 
-        <p className="text-[#00D4FF] font-bold text-lg mb-2">
+        <p className="text-orange-400 font-black text-xl mb-2">
           {pushupCount < 20 ? 'Keep going!' : 'DONE! 💪'}
         </p>
-        <p className="text-gray-500 text-sm mb-8">
-          {pushupCount < 10
-            ? 'Focus on your body, not the urge'
-            : pushupCount < 20
-            ? "You're almost there!"
-            : 'You crushed it!'}
+        <p className="text-[#94A3B8] text-sm mb-8">
+          {pushupCount < 10 ? 'Focus on your body, not the urge' : pushupCount < 20 ? "You're almost there!" : 'You crushed it!'}
         </p>
-
         <button
-          onClick={() => {
-            if (pushupInterval.current) clearInterval(pushupInterval.current);
-            setActive(null);
-          }}
-          className="text-gray-500 text-sm hover:text-gray-300"
+          onClick={() => { if (pushupInterval.current) clearInterval(pushupInterval.current); setActive(null); }}
+          className="text-[#94A3B8]/50 text-sm hover:text-[#94A3B8] transition-colors"
         >
           Cancel
         </button>
@@ -181,122 +210,129 @@ export default function SOSPage() {
     );
   }
 
+  const INTERVENTIONS = [
+    {
+      id: 'brainwave' as InterventionId,
+      Icon: Waves,
+      title: 'Brainwave Session',
+      desc: '6 Hz Theta — Urge Dissolve mode',
+      time: '5-15 min',
+      timeLabel: 'Dissolves cravings in 5-15 minutes',
+      gradient: 'from-blue-600 to-cyan-500',
+      glow: 'rgba(0,212,255,0.3)',
+      onClick: () => router.push('/brainwave?mode=theta'),
+      disabled: false,
+    },
+    {
+      id: 'hrv' as InterventionId,
+      Icon: Wind,
+      title: 'HRV Breathwork',
+      desc: '4-7-8 breathing with camera PPG',
+      time: '5 min',
+      timeLabel: 'Activates parasympathetic nervous system',
+      gradient: 'from-emerald-600 to-green-400',
+      glow: 'rgba(16,185,129,0.3)',
+      onClick: () => router.push('/hrv'),
+      disabled: false,
+    },
+    {
+      id: 'pushups' as InterventionId,
+      Icon: Dumbbell,
+      title: 'Physical Snap',
+      desc: '20 pushup challenge',
+      time: '2 min',
+      timeLabel: 'Floods body with endorphins, redirects energy',
+      gradient: 'from-orange-600 to-red-500',
+      glow: 'rgba(234,88,12,0.3)',
+      onClick: startPushups,
+      disabled: false,
+    },
+    {
+      id: 'pattern' as InterventionId,
+      Icon: Zap,
+      title: 'Pattern Interrupt',
+      desc: epilepsySafeMode ? 'Safe Mode — redirects to Theta session' : '3-second high-contrast flash → Theta',
+      time: '30 sec',
+      timeLabel: epilepsySafeMode ? 'Audio-only safe redirect' : 'Breaks neural craving loop instantly',
+      gradient: 'from-amber-500 to-yellow-400',
+      glow: 'rgba(245,158,11,0.3)',
+      onClick: startPatternInterrupt,
+      disabled: false,
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-[#0A0E1A]">
+    <div className="min-h-screen bg-[#050810] relative overflow-hidden">
       {xpToast && <XPToast amount={xpToast.amount} label={xpToast.label} onDone={() => setXpToast(null)} />}
 
+      {/* Background pulse */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-red-600/5 rounded-full blur-3xl" />
+      </div>
+
       {/* Header */}
-      <div className="bg-[#060912] border-b border-red-900/50 px-4 py-4 flex items-center gap-3">
-        <button onClick={() => router.back()} className="text-gray-400 hover:text-white transition-colors">
-          <ArrowLeft size={20} />
+      <div className="bg-[#050810]/90 backdrop-blur-xl border-b border-red-500/20 px-4 py-4 flex items-center gap-3 relative z-10">
+        <button onClick={() => router.back()} className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-[#94A3B8] hover:text-white transition-all">
+          <ArrowLeft size={18} />
         </button>
         <div>
-          <h1 className="text-xl font-black text-white">SOS — I Need Help Now</h1>
-          <p className="text-red-400 text-xs">Choose an intervention below</p>
+          <h1 className="text-2xl font-black text-white">YOU GOT THIS</h1>
+          <p className="text-red-400/70 text-xs">The urge will pass. Choose an intervention.</p>
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 py-6 space-y-4">
-        {/* Warning */}
-        <div className="bg-red-900/20 border border-red-800/50 rounded-xl p-3 text-center">
-          <p className="text-red-300 text-sm font-semibold">The urge will pass. You are not your cravings.</p>
-          <p className="text-red-400/60 text-xs mt-1">Average craving duration: 15-20 minutes</p>
+      <div className="max-w-lg mx-auto px-4 py-6 space-y-4 relative z-10">
+        {/* Urge banner */}
+        <div className="glass border-red-500/20 p-4 text-center">
+          <p className="text-red-300 font-bold text-sm">The urge will pass. You are not your cravings.</p>
+          <p className="text-red-400/50 text-xs mt-1">Average craving duration: 15-20 minutes</p>
         </div>
 
-        {/* Intervention 1: Brainwave */}
-        <button
-          onClick={() => router.push('/brainwave?mode=theta')}
-          className="w-full bg-[#111827] border border-[#1E2A3A] rounded-2xl p-5 text-left hover:border-[#00D4FF]/50 transition-all active:scale-95"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl bg-blue-900/30 border border-blue-700/30 flex items-center justify-center flex-shrink-0">
-              <Waves size={26} className="text-blue-400" />
+        {/* Interventions */}
+        {INTERVENTIONS.map((item) => (
+          <button
+            key={item.id}
+            onClick={item.onClick}
+            disabled={item.disabled}
+            className="w-full glass glass-hover rounded-2xl p-5 text-left transition-all active:scale-95 group"
+            style={{ borderColor: item.disabled ? undefined : undefined }}
+          >
+            <div className="flex items-center gap-4">
+              <div
+                className={`w-14 h-14 rounded-xl bg-gradient-to-br ${item.gradient} flex items-center justify-center flex-shrink-0`}
+                style={{ boxShadow: `0 0 20px ${item.glow}` }}
+              >
+                <item.Icon size={26} className="text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-white font-black text-lg">{item.title}</h3>
+                <p className="text-[#94A3B8] text-sm">{item.desc}</p>
+                <p className="text-[#94A3B8]/50 text-xs mt-1">{item.timeLabel}</p>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <div className="glass-sm px-2 py-1 rounded-lg">
+                  <p className="text-white/50 text-xs font-bold">{item.time}</p>
+                </div>
+                <p className="text-white/20 text-lg mt-1 group-hover:text-white/50 transition-colors">→</p>
+              </div>
             </div>
-            <div className="flex-1">
-              <h3 className="text-white font-bold text-lg">Brainwave Session</h3>
-              <p className="text-gray-400 text-sm">6 Hz Theta — Urge Dissolve mode</p>
-              <p className="text-blue-400 text-xs mt-1">Dissolves cravings in 5-15 minutes</p>
-            </div>
-            <div className="text-gray-600">→</div>
-          </div>
-        </button>
-
-        {/* Intervention 2: HRV */}
-        <button
-          onClick={() => router.push('/hrv')}
-          className="w-full bg-[#111827] border border-[#1E2A3A] rounded-2xl p-5 text-left hover:border-green-500/50 transition-all active:scale-95"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl bg-green-900/30 border border-green-700/30 flex items-center justify-center flex-shrink-0">
-              <Wind size={26} className="text-green-400" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-white font-bold text-lg">HRV Breathwork</h3>
-              <p className="text-gray-400 text-sm">4-7-8 breathing with camera PPG</p>
-              <p className="text-green-400 text-xs mt-1">Activates parasympathetic nervous system</p>
-            </div>
-            <div className="text-gray-600">→</div>
-          </div>
-        </button>
-
-        {/* Intervention 3: Pushups */}
-        <button
-          onClick={startPushups}
-          className="w-full bg-[#111827] border border-[#1E2A3A] rounded-2xl p-5 text-left hover:border-orange-500/50 transition-all active:scale-95"
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl bg-orange-900/30 border border-orange-700/30 flex items-center justify-center flex-shrink-0">
-              <Dumbbell size={26} className="text-orange-400" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-white font-bold text-lg">Physical Snap</h3>
-              <p className="text-gray-400 text-sm">20 pushup challenge</p>
-              <p className="text-orange-400 text-xs mt-1">Flood body with endorphins, redirect energy</p>
-            </div>
-            <div className="text-gray-600">→</div>
-          </div>
-        </button>
-
-        {/* Intervention 4: Pattern Interrupt */}
-        <button
-          onClick={startPatternInterrupt}
-          className={`w-full bg-[#111827] rounded-2xl p-5 text-left transition-all active:scale-95 ${
-            epilepsySafeMode
-              ? 'border border-yellow-800/50 opacity-70'
-              : 'border border-[#1E2A3A] hover:border-yellow-500/50'
-          }`}
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl bg-yellow-900/30 border border-yellow-700/30 flex items-center justify-center flex-shrink-0">
-              <Zap size={26} className="text-yellow-400" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-white font-bold text-lg">Pattern Interrupt</h3>
-              <p className="text-gray-400 text-sm">
-                {epilepsySafeMode ? 'Disabled (Safe Mode) → Theta session' : '3-second high-contrast flash → Theta session'}
-              </p>
-              <p className="text-yellow-400 text-xs mt-1">
-                {epilepsySafeMode ? 'Safe mode redirects to audio-only session' : 'Breaks neural craving loop instantly'}
-              </p>
-            </div>
-            <div className="text-gray-600">→</div>
-          </div>
-          {epilepsySafeMode && (
-            <p className="text-yellow-600 text-xs mt-2">⚠️ Flash disabled — Epilepsy Safe Mode active</p>
-          )}
-        </button>
+            {item.id === 'pattern' && epilepsySafeMode && (
+              <p className="text-amber-500/60 text-xs mt-3">Flash disabled — Epilepsy Safe Mode active</p>
+            )}
+          </button>
+        ))}
 
         {/* Crisis resources */}
-        <div className="bg-[#111827] border border-[#1E2A3A] rounded-xl p-4">
-          <p className="text-gray-400 text-xs text-center mb-2">If you're in crisis:</p>
-          <div className="flex gap-3 justify-center text-xs text-[#00D4FF]">
+        <div className="glass p-4">
+          <p className="text-[#94A3B8]/50 text-xs text-center mb-2">If you are in crisis:</p>
+          <div className="flex gap-3 justify-center text-xs text-cyan-400/70 flex-wrap">
             <span>988 — Crisis Lifeline</span>
-            <span>·</span>
-            <span>Crisis Text Line: Text HOME to 741741</span>
+            <span className="text-white/20">·</span>
+            <span>Text HOME to 741741</span>
           </div>
         </div>
 
-        <p className="text-center text-xs text-gray-700">
+        <p className="text-center text-xs text-white/15">
           Not a substitute for professional help. If in immediate danger, call 911.
         </p>
       </div>

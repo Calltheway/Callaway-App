@@ -28,12 +28,12 @@ const YBOCS_QUESTIONS = [
 const SCALE_LABELS: Record<number, string> = { 0: 'None', 1: 'Mild', 2: 'Moderate', 3: 'Severe', 4: 'Extreme' };
 
 const HABIT_TYPES = [
-  { id: 'pornography', label: 'Pornography', emoji: '🔒' },
-  { id: 'social-media', label: 'Social Media', emoji: '📱' },
-  { id: 'gaming', label: 'Gaming', emoji: '🎮' },
-  { id: 'substances', label: 'Substances', emoji: '🍃' },
-  { id: 'gambling', label: 'Gambling', emoji: '🎲' },
-  { id: 'other', label: 'Other habit', emoji: '🔗' },
+  { id: 'pornography', label: 'Pornography', emoji: '🔒', desc: 'The most common and most misunderstood addiction of our time' },
+  { id: 'social-media', label: 'Social Media', emoji: '📱', desc: 'Endless scrolling wired to the same dopamine loop' },
+  { id: 'gaming', label: 'Gaming', emoji: '🎮', desc: 'Achievement loops designed by billion-dollar studios' },
+  { id: 'substances', label: 'Substances', emoji: '🍃', desc: 'Chemical dependency affecting brain chemistry' },
+  { id: 'gambling', label: 'Gambling', emoji: '🎲', desc: 'Variable reward — the most addictive pattern known' },
+  { id: 'other', label: 'Other habit', emoji: '🔗', desc: 'Any compulsive behavior you want to overcome' },
 ];
 
 export default function OnboardingPage() {
@@ -49,7 +49,7 @@ export default function OnboardingPage() {
   const [commitmentMinutes, setCommitmentMinutes] = useState(15);
   const [userName, setUserName] = useState('');
   const [sobrietyDate, setSobrietyDate] = useState(new Date().toISOString().split('T')[0]);
-  const [habitType, setHabitType] = useState('');
+  const [habitType, setHabitType] = useState('pornography');
   const [saving, setSaving] = useState(false);
   const [epilepsySafe, setEpilepsySafe] = useState(false);
 
@@ -125,63 +125,75 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0E1A] flex flex-col">
-      {/* Progress bar */}
-      <div className="fixed top-0 left-0 right-0 z-10 bg-[#060912] border-b border-[#1E2A3A]">
-        <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
-          {step > 1 && (
-            <button
-              onClick={() => setStep((s) => s - 1)}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              <ArrowLeft size={20} />
-            </button>
-          )}
-          <div className="flex-1">
-            <div className="flex justify-between text-xs text-gray-500 mb-1">
-              <span>Step {step} of {TOTAL_STEPS}</span>
-              <span>{Math.round(progress)}%</span>
-            </div>
-            <div className="h-1.5 bg-[#1E2A3A] rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[#00D4FF] rounded-full transition-all duration-500"
-                style={{ width: `${progress}%` }}
-              />
+    <div className="min-h-screen bg-[#050810] flex flex-col relative overflow-hidden">
+      {/* Background atmosphere */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-violet-600/6 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-cyan-500/4 rounded-full blur-3xl" />
+      </div>
+
+      {/* Premium step indicator */}
+      <div className="fixed top-0 left-0 right-0 z-20 backdrop-blur-xl bg-[#050810]/80 border-b border-white/[0.06]">
+        <div className="max-w-lg mx-auto px-4 py-4">
+          <div className="flex items-center gap-3">
+            {step > 1 && (
+              <button
+                onClick={() => setStep((s) => s - 1)}
+                className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-[#94A3B8] hover:text-white transition-all flex-shrink-0"
+              >
+                <ArrowLeft size={18} />
+              </button>
+            )}
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[#94A3B8] text-xs font-semibold">Step {step} of {TOTAL_STEPS}</span>
+                <span className="gradient-text text-xs font-bold">{Math.round(progress)}%</span>
+              </div>
+              {/* Step dots */}
+              <div className="flex gap-1">
+                {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`h-1 rounded-full transition-all duration-500 ${
+                      i < step ? 'bg-gradient-to-r from-violet-500 to-cyan-500' : 'bg-white/[0.08]'
+                    }`}
+                    style={{ flex: i < step ? 2 : 1 }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 max-w-lg mx-auto w-full px-4 pt-24 pb-10">
+      <div className="flex-1 max-w-lg mx-auto w-full px-4 pt-28 pb-10 relative z-10">
 
         {/* Step 1: Age Confirmation */}
         {step === 1 && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-slide-up">
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/30 flex items-center justify-center">
-                <Shield className="text-[#00D4FF]" size={28} />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-violet-600/20 to-cyan-500/10 border border-violet-500/30 flex items-center justify-center"
+                style={{ boxShadow: '0 0 30px rgba(124,58,237,0.2)' }}>
+                <Shield className="text-violet-400" size={28} />
               </div>
-              <h1 className="text-3xl font-black text-white mb-2">Before we begin</h1>
-              <p className="text-gray-400">This app contains content and exercises for adults dealing with compulsive behaviors.</p>
+              <h1 className="text-4xl font-black text-white mb-3 leading-tight">Before we begin</h1>
+              <p className="text-[#94A3B8]">This is a safe space for adults seeking freedom from compulsive behaviors. No judgment, only science.</p>
             </div>
 
-            <div className="bg-[#111827] border border-[#1E2A3A] rounded-2xl p-6 space-y-4">
-              <label className="flex items-start gap-4 cursor-pointer">
-                <div
-                  className={`mt-0.5 w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${ageConfirmed ? 'bg-[#00D4FF] border-[#00D4FF]' : 'border-[#1E2A3A]'}`}
-                  onClick={() => setAgeConfirmed(!ageConfirmed)}
-                >
-                  {ageConfirmed && <CheckCircle size={14} className="text-[#0A0E1A]" />}
+            <div className="glass p-6">
+              <label className="flex items-start gap-4 cursor-pointer" onClick={() => setAgeConfirmed(!ageConfirmed)}>
+                <div className={`mt-0.5 w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${ageConfirmed ? 'bg-gradient-to-br from-violet-600 to-cyan-500 border-transparent' : 'border-white/[0.15]'}`}>
+                  {ageConfirmed && <CheckCircle size={14} className="text-white" />}
                 </div>
                 <span className="text-white text-sm leading-relaxed">
-                  I confirm that I am <strong>18 years of age or older</strong> and I am voluntarily using this app to support my personal recovery journey.
+                  I confirm that I am <strong className="text-white">18 years of age or older</strong> and I am voluntarily using this app to support my personal recovery journey.
                 </span>
               </label>
             </div>
 
-            <div className="bg-yellow-900/20 border border-yellow-800/50 rounded-2xl p-4">
-              <p className="text-yellow-400 text-xs leading-relaxed">
-                <strong>Medical Disclaimer:</strong> Dopamind is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for medical conditions. If you are in crisis, call 988 (Suicide & Crisis Lifeline) or 911.
+            <div className="glass border-amber-500/20 p-4">
+              <p className="text-amber-400/80 text-xs leading-relaxed">
+                <strong className="text-amber-400">Medical Disclaimer:</strong> Dopamind is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider. If you are in crisis, call 988 (Suicide &amp; Crisis Lifeline) or 911.
               </p>
             </div>
           </div>
@@ -189,24 +201,22 @@ export default function OnboardingPage() {
 
         {/* Step 2: Epilepsy Warning */}
         {step === 2 && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-slide-up">
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center">
-                <AlertTriangle className="text-yellow-400" size={28} />
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center">
+                <AlertTriangle className="text-amber-400" size={28} />
               </div>
-              <h1 className="text-3xl font-black text-white mb-2">Safety Warning</h1>
-              <p className="text-gray-400">Photosensitivity & Epilepsy Notice</p>
+              <h1 className="text-4xl font-black text-white mb-3">Safety First</h1>
+              <p className="text-[#94A3B8]">Photosensitivity &amp; Epilepsy Notice</p>
             </div>
 
-            <div className="bg-yellow-900/20 border border-yellow-600/50 rounded-2xl p-5 space-y-3">
-              <p className="text-yellow-300 font-bold text-sm">⚠️ Important: Read before proceeding</p>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Dopamind's brainwave entrainment features include <strong>screen pulse effects</strong> and <strong>visual flashing patterns</strong> at various frequencies. These effects are designed to support neural entrainment but may not be suitable for everyone.
+            <div className="glass border-amber-500/20 p-5 space-y-3">
+              <p className="text-amber-300 font-bold text-sm">Important: Read before proceeding</p>
+              <p className="text-[#94A3B8] text-sm leading-relaxed">
+                Dopamind's brainwave entrainment features include <strong className="text-white">screen pulse effects</strong> and <strong className="text-white">visual patterns</strong> at various frequencies designed to support neural entrainment.
               </p>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Do NOT use the visual entrainment features if you have:
-              </p>
-              <ul className="text-gray-400 text-sm space-y-1">
+              <p className="text-[#94A3B8] text-sm">Do NOT use visual entrainment if you have:</p>
+              <ul className="text-[#94A3B8]/70 text-sm space-y-1">
                 <li>• Epilepsy or a history of seizures</li>
                 <li>• Photosensitive conditions</li>
                 <li>• Been advised to avoid flashing lights</li>
@@ -214,103 +224,112 @@ export default function OnboardingPage() {
               </ul>
             </div>
 
-            <div className="bg-[#111827] border border-[#1E2A3A] rounded-2xl p-5 space-y-4">
-              <p className="text-white font-semibold text-sm">Enable Epilepsy Safe Mode?</p>
-              <p className="text-gray-400 text-xs">Safe Mode disables all screen flashing and fast visual effects. Audio brainwave entrainment (binaural beats) still works fully.</p>
-
+            <div className="glass p-5 space-y-4">
+              <p className="text-white font-bold text-sm">Enable Epilepsy Safe Mode?</p>
+              <p className="text-[#94A3B8] text-xs">Safe Mode disables all screen flashing. Audio brainwave entrainment (binaural beats) still works fully.</p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setEpilepsySafe(true)}
-                  className={`flex-1 py-3 rounded-xl border text-sm font-semibold transition-all ${epilepsySafe ? 'bg-yellow-500/20 border-yellow-500 text-yellow-300' : 'border-[#1E2A3A] text-gray-400 hover:border-yellow-800'}`}
+                  className={`flex-1 py-3 rounded-xl border text-sm font-semibold transition-all ${epilepsySafe ? 'bg-amber-500/20 border-amber-500 text-amber-300' : 'border-white/[0.08] text-[#94A3B8] hover:border-amber-800/50'}`}
                 >
-                  Yes — Enable Safe Mode
+                  Yes — Safe Mode
                 </button>
                 <button
                   onClick={() => setEpilepsySafe(false)}
-                  className={`flex-1 py-3 rounded-xl border text-sm font-semibold transition-all ${!epilepsySafe ? 'bg-[#00D4FF]/10 border-[#00D4FF] text-[#00D4FF]' : 'border-[#1E2A3A] text-gray-400 hover:border-gray-600'}`}
+                  className={`flex-1 py-3 rounded-xl border text-sm font-semibold transition-all ${!epilepsySafe ? 'bg-cyan-500/10 border-cyan-500/60 text-cyan-400' : 'border-white/[0.08] text-[#94A3B8] hover:border-white/[0.15]'}`}
                 >
                   No — Full Experience
                 </button>
               </div>
             </div>
 
-            <label className="flex items-start gap-3 cursor-pointer bg-[#111827] border border-[#1E2A3A] rounded-2xl p-4">
-              <div
-                className={`mt-0.5 w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${epilepsyAcknowledged ? 'bg-[#00D4FF] border-[#00D4FF]' : 'border-[#1E2A3A]'}`}
-                onClick={() => setEpilepsyAcknowledged(!epilepsyAcknowledged)}
-              >
-                {epilepsyAcknowledged && <CheckCircle size={14} className="text-[#0A0E1A]" />}
-              </div>
-              <span className="text-white text-sm leading-relaxed">
-                I have read the safety warning and understand the risks. I acknowledge my {epilepsySafe ? 'Epilepsy Safe Mode preference' : 'choice to use the full experience'}.
-              </span>
-            </label>
+            <div className="glass p-4 cursor-pointer" onClick={() => setEpilepsyAcknowledged(!epilepsyAcknowledged)}>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <div className={`mt-0.5 w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${epilepsyAcknowledged ? 'bg-gradient-to-br from-violet-600 to-cyan-500 border-transparent' : 'border-white/[0.15]'}`}>
+                  {epilepsyAcknowledged && <CheckCircle size={14} className="text-white" />}
+                </div>
+                <span className="text-white text-sm leading-relaxed">
+                  I have read the safety warning and acknowledge my {epilepsySafe ? 'Epilepsy Safe Mode preference' : 'choice to use the full experience'}.
+                </span>
+              </label>
+            </div>
           </div>
         )}
 
         {/* Step 3: Motivations */}
         {step === 3 && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-slide-up">
             <div>
-              <h1 className="text-3xl font-black text-white mb-2">Why are you here?</h1>
-              <p className="text-gray-400">Select all that resonate with you. These fuel your journey.</p>
+              <h1 className="text-4xl font-black text-white mb-3 leading-tight">
+                Why are you
+                <br /><span className="gradient-text">here?</span>
+              </h1>
+              <p className="text-[#94A3B8]">Select all that resonate. These become your armor on hard days.</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              {MOTIVATIONS.map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => toggleMotivation(m.id)}
-                  className={`p-4 rounded-2xl border-2 text-left transition-all active:scale-95 ${
-                    selectedMotivations.includes(m.id)
-                      ? 'bg-[#00D4FF]/10 border-[#00D4FF]'
-                      : 'bg-[#111827] border-[#1E2A3A] hover:border-gray-600'
-                  }`}
-                >
-                  <div className="text-2xl mb-2">{m.emoji}</div>
-                  <div className="text-white font-semibold text-sm">{m.label}</div>
-                  <div className="text-gray-400 text-xs mt-1">{m.desc}</div>
-                  {selectedMotivations.includes(m.id) && (
-                    <CheckCircle size={16} className="text-[#00D4FF] mt-2" />
-                  )}
-                </button>
-              ))}
+              {MOTIVATIONS.map((m) => {
+                const selected = selectedMotivations.includes(m.id);
+                return (
+                  <button
+                    key={m.id}
+                    onClick={() => toggleMotivation(m.id)}
+                    className={`p-4 rounded-2xl border-2 text-left transition-all active:scale-95 ${
+                      selected
+                        ? 'bg-violet-600/10 border-violet-500/60'
+                        : 'glass glass-hover border-transparent'
+                    }`}
+                  >
+                    <div className="text-2xl mb-2">{m.emoji}</div>
+                    <div className="text-white font-bold text-sm">{m.label}</div>
+                    <div className="text-[#94A3B8] text-xs mt-1">{m.desc}</div>
+                    {selected && (
+                      <div className="mt-2 w-5 h-5 rounded-full bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center">
+                        <CheckCircle size={12} className="text-white" />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
 
         {/* Step 4: YBOCS Assessment */}
         {step === 4 && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-slide-up">
             <div>
-              <h1 className="text-3xl font-black text-white mb-2">Habit Assessment</h1>
-              <p className="text-gray-400 text-sm">Rate each area from 0 (none) to 4 (extreme). This helps us personalize your recovery plan.</p>
+              <h1 className="text-4xl font-black text-white mb-3 leading-tight">
+                <span className="gradient-text">Understand</span>
+                <br />your patterns
+              </h1>
+              <p className="text-[#94A3B8] text-sm">Rate each area 0-4. This personalizes your recovery plan with clinical precision.</p>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {YBOCS_QUESTIONS.map((q) => (
-                <div key={q.id} className="bg-[#111827] border border-[#1E2A3A] rounded-2xl p-5">
-                  <p className="text-white font-semibold text-sm mb-1">{q.label}</p>
-                  <p className="text-gray-500 text-xs mb-4">{q.desc}</p>
+                <div key={q.id} className="glass p-5">
+                  <p className="text-white font-bold text-sm mb-1">{q.label}</p>
+                  <p className="text-[#94A3B8]/70 text-xs mb-4">{q.desc}</p>
                   <div className="flex gap-2">
                     {[0, 1, 2, 3, 4].map((val) => (
                       <button
                         key={val}
                         onClick={() => setYbocs(q.id, val)}
-                        className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
+                        className={`flex-1 py-2.5 rounded-lg text-xs font-bold transition-all ${
                           ybocsAnswers[q.id] === val
-                            ? 'bg-[#00D4FF] text-[#0A0E1A]'
-                            : 'bg-[#060912] text-gray-500 hover:bg-[#1E2A3A]'
+                            ? 'bg-gradient-to-r from-violet-600 to-cyan-500 text-white'
+                            : 'bg-white/[0.04] text-[#94A3B8] hover:bg-white/[0.08]'
                         }`}
                       >
                         {val}
                       </button>
                     ))}
                   </div>
-                  <div className="flex justify-between text-xs text-gray-600 mt-1">
+                  <div className="flex justify-between text-xs text-white/20 mt-1.5">
                     <span>None</span>
                     <span>Extreme</span>
                   </div>
                   {ybocsAnswers[q.id] !== undefined && (
-                    <p className="text-[#00D4FF] text-xs mt-2">
+                    <p className="gradient-text text-xs mt-2 font-semibold">
                       {SCALE_LABELS[ybocsAnswers[q.id]]}
                     </p>
                   )}
@@ -318,11 +337,11 @@ export default function OnboardingPage() {
               ))}
             </div>
             {Object.keys(ybocsAnswers).length === YBOCS_QUESTIONS.length && (
-              <div className="bg-[#111827] border border-[#1E2A3A] rounded-2xl p-4 text-center">
-                <p className="text-gray-400 text-xs mb-1">Your severity score</p>
-                <p className="text-3xl font-black text-[#00D4FF]">{ybocsSeverity}<span className="text-lg text-gray-500">/20</span></p>
-                <p className="text-gray-500 text-xs mt-1">
-                  {ybocsSeverity <= 7 ? 'Mild — You can do this' : ybocsSeverity <= 14 ? 'Moderate — This app will really help' : 'Severe — You\'ve made the right choice coming here'}
+              <div className="card-gradient-border p-5 text-center">
+                <p className="text-[#94A3B8] text-xs mb-2">Your severity score</p>
+                <p className="text-4xl font-black gradient-text">{ybocsSeverity}<span className="text-xl text-white/20">/20</span></p>
+                <p className="text-[#94A3B8] text-sm mt-2">
+                  {ybocsSeverity <= 7 ? 'Mild — You can absolutely do this' : ybocsSeverity <= 14 ? 'Moderate — This app will make a real difference' : 'Severe — You\'ve made the most important choice coming here'}
                 </p>
               </div>
             )}
@@ -331,27 +350,32 @@ export default function OnboardingPage() {
 
         {/* Step 5: Recovery Style */}
         {step === 5 && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-slide-up">
             <div>
-              <h1 className="text-3xl font-black text-white mb-2">Your recovery style</h1>
-              <p className="text-gray-400">How do you prefer to heal?</p>
+              <h1 className="text-4xl font-black text-white mb-3 leading-tight">
+                Your recovery
+                <br /><span className="gradient-text">style</span>
+              </h1>
+              <p className="text-[#94A3B8]">How do you prefer to heal? There is no wrong answer.</p>
             </div>
             <div className="space-y-3">
               <button
                 onClick={() => setRecoveryStyle('solo')}
-                className={`w-full p-5 rounded-2xl border-2 text-left transition-all ${recoveryStyle === 'solo' ? 'bg-[#00D4FF]/10 border-[#00D4FF]' : 'bg-[#111827] border-[#1E2A3A] hover:border-gray-600'}`}
+                className={`w-full p-5 rounded-2xl border-2 text-left transition-all active:scale-95 ${recoveryStyle === 'solo' ? 'bg-violet-600/10 border-violet-500/60' : 'glass glass-hover border-transparent'}`}
               >
-                <div className="text-3xl mb-2">⚔️</div>
-                <h3 className="text-white font-bold text-lg">Solo Warrior</h3>
-                <p className="text-gray-400 text-sm mt-1">Private, focused recovery. Your journey is your own. No community feed, full anonymity.</p>
+                <div className="text-3xl mb-3">⚔️</div>
+                <h3 className="text-white font-black text-lg">Solo Warrior</h3>
+                <p className="text-[#94A3B8] text-sm mt-1">Private, focused recovery. Your journey is your own. Full anonymity, no community feed.</p>
+                {recoveryStyle === 'solo' && <div className="mt-3 inline-block px-3 py-1 rounded-full bg-violet-600/20 border border-violet-500/40 text-violet-400 text-xs font-bold">Selected</div>}
               </button>
               <button
                 onClick={() => setRecoveryStyle('community')}
-                className={`w-full p-5 rounded-2xl border-2 text-left transition-all ${recoveryStyle === 'community' ? 'bg-[#00D4FF]/10 border-[#00D4FF]' : 'bg-[#111827] border-[#1E2A3A] hover:border-gray-600'}`}
+                className={`w-full p-5 rounded-2xl border-2 text-left transition-all active:scale-95 ${recoveryStyle === 'community' ? 'bg-violet-600/10 border-violet-500/60' : 'glass glass-hover border-transparent'}`}
               >
-                <div className="text-3xl mb-2">🤝</div>
-                <h3 className="text-white font-bold text-lg">Community Driven</h3>
-                <p className="text-gray-400 text-sm mt-1">Accountability partners, group challenges, anonymous wins feed. Stronger together.</p>
+                <div className="text-3xl mb-3">🤝</div>
+                <h3 className="text-white font-black text-lg">Community Driven</h3>
+                <p className="text-[#94A3B8] text-sm mt-1">Accountability partners, group challenges, anonymous wins feed. Stronger together.</p>
+                {recoveryStyle === 'community' && <div className="mt-3 inline-block px-3 py-1 rounded-full bg-violet-600/20 border border-violet-500/40 text-violet-400 text-xs font-bold">Selected</div>}
               </button>
             </div>
           </div>
@@ -359,29 +383,34 @@ export default function OnboardingPage() {
 
         {/* Step 6: Daily Commitment */}
         {step === 6 && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-slide-up">
             <div>
-              <h1 className="text-3xl font-black text-white mb-2">Daily commitment</h1>
-              <p className="text-gray-400">How much time can you dedicate each day to your recovery?</p>
+              <h1 className="text-4xl font-black text-white mb-3 leading-tight">
+                Daily
+                <br /><span className="gradient-text">commitment</span>
+              </h1>
+              <p className="text-[#94A3B8]">Consistency beats intensity. How much time can you dedicate daily?</p>
             </div>
             <div className="space-y-3">
               {[
-                { min: 5, label: '5 minutes', desc: 'Quick sessions — perfect for busy days', icon: '⚡' },
+                { min: 5,  label: '5 minutes',  desc: 'Quick sessions — perfect for busy days', icon: '⚡' },
                 { min: 15, label: '15 minutes', desc: 'Recommended — one brainwave session + check-in', icon: '🎯' },
                 { min: 30, label: '30 minutes', desc: 'Full protocol — brainwave + HRV + journal', icon: '🧠' },
               ].map((opt) => (
                 <button
                   key={opt.min}
                   onClick={() => setCommitmentMinutes(opt.min)}
-                  className={`w-full p-5 rounded-2xl border-2 text-left transition-all flex items-center gap-4 ${commitmentMinutes === opt.min ? 'bg-[#00D4FF]/10 border-[#00D4FF]' : 'bg-[#111827] border-[#1E2A3A] hover:border-gray-600'}`}
+                  className={`w-full p-5 rounded-2xl border-2 text-left transition-all active:scale-95 flex items-center gap-4 ${commitmentMinutes === opt.min ? 'bg-violet-600/10 border-violet-500/60' : 'glass glass-hover border-transparent'}`}
                 >
                   <span className="text-2xl">{opt.icon}</span>
-                  <div>
-                    <h3 className="text-white font-bold">{opt.label}</h3>
-                    <p className="text-gray-400 text-sm">{opt.desc}</p>
+                  <div className="flex-1">
+                    <h3 className="text-white font-black">{opt.label}</h3>
+                    <p className="text-[#94A3B8] text-sm">{opt.desc}</p>
                   </div>
                   {commitmentMinutes === opt.min && (
-                    <CheckCircle size={20} className="text-[#00D4FF] ml-auto" />
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center flex-shrink-0">
+                      <CheckCircle size={14} className="text-white" />
+                    </div>
                   )}
                 </button>
               ))}
@@ -391,59 +420,73 @@ export default function OnboardingPage() {
 
         {/* Step 7: Name + Date + Habit */}
         {step === 7 && (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-slide-up">
             <div>
-              <h1 className="text-3xl font-black text-white mb-2">Almost there</h1>
-              <p className="text-gray-400">Tell us about yourself so we can personalize your journey.</p>
+              <h1 className="text-4xl font-black text-white mb-3 leading-tight">
+                Almost
+                <br /><span className="gradient-text">there</span>
+              </h1>
+              <p className="text-[#94A3B8]">Personalize your journey. This stays on your device.</p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Your first name</label>
+                <label className="block text-sm font-bold text-[#94A3B8] mb-2 uppercase tracking-wider">Your first name</label>
                 <input
                   type="text"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   placeholder="What should we call you?"
-                  className="w-full px-4 py-3 bg-[#111827] border border-[#1E2A3A] rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-[#00D4FF] transition-colors"
+                  className="w-full px-4 py-3.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/20 focus:outline-none focus:border-violet-500/60 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">What are you working to overcome?</label>
-                <div className="grid grid-cols-2 gap-2">
+                <label className="block text-sm font-bold text-[#94A3B8] mb-2 uppercase tracking-wider">What are you overcoming?</label>
+                <div className="space-y-2">
                   {HABIT_TYPES.map((h) => (
                     <button
                       key={h.id}
                       onClick={() => setHabitType(h.id)}
-                      className={`p-3 rounded-xl border text-left text-sm transition-all ${habitType === h.id ? 'bg-[#00D4FF]/10 border-[#00D4FF] text-white' : 'bg-[#111827] border-[#1E2A3A] text-gray-400 hover:border-gray-600'}`}
+                      className={`w-full p-4 rounded-xl border text-left transition-all flex items-start gap-3 ${habitType === h.id ? 'bg-violet-600/10 border-violet-500/60' : 'glass glass-hover border-transparent'}`}
                     >
-                      <span className="mr-2">{h.emoji}</span>{h.label}
+                      <span className="text-xl flex-shrink-0">{h.emoji}</span>
+                      <div className="flex-1">
+                        <p className={`font-bold text-sm ${habitType === h.id ? 'text-white' : 'text-[#94A3B8]'}`}>{h.label}</p>
+                        <p className="text-[#94A3B8]/60 text-xs mt-0.5">{h.desc}</p>
+                      </div>
+                      {habitType === h.id && (
+                        <div className="w-5 h-5 rounded-full bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <CheckCircle size={11} className="text-white" />
+                        </div>
+                      )}
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Sobriety start date</label>
+                <label className="block text-sm font-bold text-[#94A3B8] mb-2 uppercase tracking-wider">Sobriety start date</label>
                 <input
                   type="date"
                   value={sobrietyDate}
                   onChange={(e) => setSobrietyDate(e.target.value)}
                   max={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-3 bg-[#111827] border border-[#1E2A3A] rounded-xl text-white focus:outline-none focus:border-[#00D4FF] transition-colors"
+                  className="w-full px-4 py-3.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:border-violet-500/60 transition-colors"
                 />
-                <p className="text-gray-500 text-xs mt-1">When did you start this recovery attempt? (can be today)</p>
+                <p className="text-[#94A3B8]/50 text-xs mt-1.5">When did you start this recovery attempt? Can be today.</p>
               </div>
             </div>
 
-            <div className="bg-[#111827] border border-[#1E2A3A] rounded-2xl p-4 text-center">
-              <p className="text-gray-400 text-sm">Starting your journey as</p>
-              <p className="text-2xl font-black text-[#00D4FF] mt-1">{userName || '...'}</p>
-              <p className="text-gray-500 text-xs mt-1">
-                {habitType ? `Overcoming ${HABIT_TYPES.find(h => h.id === habitType)?.label}` : ''}
-              </p>
-            </div>
+            {userName && habitType && (
+              <div className="card-gradient-border p-5 text-center animate-scale-in">
+                <p className="text-[#94A3B8] text-sm">Starting the journey as</p>
+                <p className="text-3xl font-black gradient-text mt-1">{userName}</p>
+                <p className="text-[#94A3B8]/60 text-xs mt-1">
+                  Overcoming {HABIT_TYPES.find(h => h.id === habitType)?.label} — one day at a time
+                </p>
+              </div>
+            )}
           </div>
         )}
 
@@ -453,7 +496,8 @@ export default function OnboardingPage() {
             <button
               onClick={() => setStep((s) => s + 1)}
               disabled={!canProceed()}
-              className="w-full flex items-center justify-center gap-2 bg-[#00D4FF] text-[#0A0E1A] font-bold py-4 rounded-xl hover:bg-[#00B8E0] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-lg"
+              className="w-full flex items-center justify-center gap-2 btn-primary py-4 text-lg disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ boxShadow: canProceed() ? '0 0 30px rgba(124,58,237,0.4)' : 'none' }}
             >
               Continue <ArrowRight size={20} />
             </button>
@@ -461,10 +505,11 @@ export default function OnboardingPage() {
             <button
               onClick={handleComplete}
               disabled={!canProceed() || saving}
-              className="w-full flex items-center justify-center gap-2 bg-[#00D4FF] text-[#0A0E1A] font-bold py-4 rounded-xl hover:bg-[#00B8E0] transition-all disabled:opacity-40 disabled:cursor-not-allowed text-lg"
+              className="w-full flex items-center justify-center gap-2 btn-primary py-4 text-lg disabled:opacity-40 disabled:cursor-not-allowed"
+              style={{ boxShadow: canProceed() ? '0 0 40px rgba(124,58,237,0.5)' : 'none' }}
             >
               {saving ? (
-                <span className="animate-spin w-5 h-5 border-2 border-[#0A0E1A] border-t-transparent rounded-full" />
+                <span className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
               ) : (
                 <>Start My Journey <ArrowRight size={20} /></>
               )}

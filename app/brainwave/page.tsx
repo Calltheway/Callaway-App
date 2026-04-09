@@ -426,65 +426,105 @@ function BrainwaveInner() {
     );
   }
 
+  // Mode-specific gradient background
+  const modeGradients: Record<string, string> = {
+    theta: 'radial-gradient(ellipse at top, rgba(0,70,180,0.15) 0%, #050810 70%)',
+    alpha: 'radial-gradient(ellipse at top, rgba(0,150,70,0.12) 0%, #050810 70%)',
+    gamma: 'radial-gradient(ellipse at top, rgba(100,0,180,0.15) 0%, #050810 70%)',
+    delta: 'radial-gradient(ellipse at top, rgba(40,40,160,0.12) 0%, #050810 70%)',
+    beta:  'radial-gradient(ellipse at top, rgba(180,100,0,0.12) 0%, #050810 70%)',
+  };
+
   return (
-    <div className="min-h-screen bg-[#0A0E1A]">
+    <div className="min-h-screen bg-[#050810] pb-28" style={{ background: modeGradients[selectedMode] || '#050810' }}>
       {xpToast && <XPToast amount={xpToast.amount} label="Session complete" onDone={() => setXpToast(null)} />}
 
       {/* Header */}
-      <div className="bg-[#060912] border-b border-[#1E2A3A] px-4 py-4 flex items-center gap-3">
-        <button onClick={() => router.back()} className="text-gray-400 hover:text-white transition-colors">
-          <ArrowLeft size={20} />
+      <div className="bg-[#050810]/80 backdrop-blur-xl border-b border-white/[0.06] px-4 py-4 flex items-center gap-3">
+        <button onClick={() => router.back()} className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-[#94A3B8] hover:text-white transition-all">
+          <ArrowLeft size={18} />
         </button>
         <div>
           <h1 className="text-lg font-black text-white">Brainwave Entrainment</h1>
-          <p className="text-gray-500 text-xs">Neural rewiring through sound & light</p>
+          <p className="text-[#94A3B8]/60 text-xs">Neural rewiring through sound &amp; light</p>
         </div>
       </div>
 
       <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
         {epilepsySafeMode && (
-          <div className="bg-yellow-900/20 border border-yellow-700/50 rounded-xl p-3">
-            <p className="text-yellow-400 text-xs">
-              ⚠️ Epilepsy Safe Mode: Screen pulse disabled. Audio entrainment fully active.
+          <div className="glass border-amber-500/20 p-3">
+            <p className="text-amber-400 text-xs">
+              Epilepsy Safe Mode: Screen pulse disabled. Audio entrainment fully active.
             </p>
           </div>
         )}
 
-        {/* Mode selector */}
+        {/* Mode selector — horizontal pill tabs */}
         <div>
-          <h2 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-3">Entrainment Mode</h2>
-          <div className="space-y-2">
+          <h2 className="text-[#94A3B8] text-xs font-bold uppercase tracking-widest mb-3">Entrainment Mode</h2>
+          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
             {MODES.map((m) => (
               <button
                 key={m.id}
                 onClick={() => setSelectedMode(m.id)}
-                className={`w-full p-4 rounded-2xl border text-left transition-all flex items-center gap-4 ${
+                className={`flex-shrink-0 px-4 py-2.5 rounded-full border text-sm font-bold transition-all ${
                   selectedMode === m.id
-                    ? 'bg-[#00D4FF]/10 border-[#00D4FF]'
-                    : 'bg-[#111827] border-[#1E2A3A] hover:border-gray-600'
+                    ? 'text-white border-transparent'
+                    : 'text-[#94A3B8] border-white/[0.08] hover:border-white/[0.15]'
                 }`}
+                style={selectedMode === m.id ? {
+                  background: `linear-gradient(135deg, ${m.colors[2]}, ${m.colors[1]})`,
+                  boxShadow: `0 0 20px ${m.textColor}40`,
+                } : {}}
               >
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: m.colors[1] + '80', border: `1px solid ${m.textColor}40` }}
-                >
-                  <span className="font-black text-sm" style={{ color: m.textColor }}>{m.hz}Hz</span>
-                </div>
-                <div className="flex-1">
-                  <p className="text-white font-bold text-sm">{m.label}</p>
-                  <p className="text-gray-500 text-xs">{m.desc}</p>
-                </div>
-                {selectedMode === m.id && (
-                  <div className="w-2 h-2 rounded-full bg-[#00D4FF]" />
-                )}
+                {m.hz}Hz {m.label.split(' ')[0]}
               </button>
             ))}
+          </div>
+
+          {/* Selected mode card */}
+          <div className="glass p-5 mt-3">
+            <div className="flex items-center gap-4 mb-3">
+              <div
+                className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: mode.colors[1] + '80', boxShadow: `0 0 20px ${mode.textColor}30` }}
+              >
+                <span className="font-black text-lg" style={{ color: mode.textColor }}>{mode.hz}Hz</span>
+              </div>
+              <div>
+                <p className="text-white font-black text-lg">{mode.label}</p>
+                <p className="text-[#94A3B8] text-sm">{mode.desc}</p>
+              </div>
+            </div>
+            <p className="text-[#94A3B8]/70 text-xs leading-relaxed">
+              {mode.id === 'theta' && 'Theta waves (4-8 Hz) guide your brain into deep relaxation. Urges naturally dissolve as craving circuits lose their grip.'}
+              {mode.id === 'alpha' && 'Alpha waves (8-12 Hz) promote relaxed focus and dopamine rebalancing. Restores natural reward sensitivity session by session.'}
+              {mode.id === 'gamma' && 'Gamma waves (30-100 Hz) drive neural plasticity and cognitive enhancement. Accelerates rewiring of habitual pathways.'}
+              {mode.id === 'delta' && 'Delta waves (0.5-4 Hz) mirror deep sleep. Promotes HGH release and the deep neural repair that happens only at night.'}
+              {mode.id === 'beta' && 'Beta waves (13-30 Hz) build alertness and motivation. Morning sessions build mental energy to choose your values over impulse.'}
+            </p>
+          </div>
+        </div>
+
+        {/* Mandala preview (static when not playing) */}
+        <div className="flex justify-center">
+          <div className="relative w-48 h-48">
+            <canvas
+              ref={canvasRef}
+              className="w-full h-full rounded-full"
+              style={{ background: `radial-gradient(ellipse at center, ${mode.colors[1]} 0%, ${mode.colors[0]} 100%)` }}
+            />
+            {!isPlaying && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-white/30 text-xs font-bold uppercase tracking-widest">Press Play</p>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Duration selector */}
         <div>
-          <h2 className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-3">Session Duration</h2>
+          <h2 className="text-[#94A3B8] text-xs font-bold uppercase tracking-widest mb-3">Session Duration</h2>
           <div className="flex gap-3">
             {SESSION_DURATIONS.map((d) => (
               <button
@@ -492,9 +532,10 @@ function BrainwaveInner() {
                 onClick={() => setSelectedDuration(d)}
                 className={`flex-1 py-3 rounded-xl border text-sm font-bold transition-all ${
                   selectedDuration.label === d.label
-                    ? 'bg-[#00D4FF] text-[#0A0E1A] border-[#00D4FF]'
-                    : 'bg-[#111827] border-[#1E2A3A] text-gray-400 hover:border-gray-600'
+                    ? 'bg-gradient-to-r from-violet-600 to-cyan-500 text-white border-transparent'
+                    : 'glass text-[#94A3B8] border-transparent hover:text-white'
                 }`}
+                style={selectedDuration.label === d.label ? { boxShadow: '0 0 20px rgba(124,58,237,0.3)' } : {}}
               >
                 {d.label}
               </button>
@@ -503,42 +544,30 @@ function BrainwaveInner() {
         </div>
 
         {/* Audio toggle */}
-        <div className="bg-[#111827] border border-[#1E2A3A] rounded-2xl p-4 flex items-center justify-between">
+        <div className="glass p-4 flex items-center justify-between">
           <div>
-            <p className="text-white font-semibold text-sm">Binaural Audio</p>
-            <p className="text-gray-500 text-xs">Requires headphones for best results</p>
+            <p className="text-white font-bold text-sm">Binaural Audio</p>
+            <p className="text-[#94A3B8]/60 text-xs">Requires headphones for best results</p>
           </div>
           <button
             onClick={() => setAudioEnabled(!audioEnabled)}
-            className={`w-12 h-6 rounded-full transition-all relative ${audioEnabled ? 'bg-[#00D4FF]' : 'bg-[#1E2A3A]'}`}
+            className={`w-12 h-6 rounded-full transition-all relative flex-shrink-0 ${audioEnabled ? 'bg-gradient-to-r from-violet-600 to-cyan-500' : 'bg-white/[0.08]'}`}
           >
-            <div className={`w-5 h-5 rounded-full bg-white absolute top-0.5 transition-all ${audioEnabled ? 'right-0.5' : 'left-0.5'}`} />
+            <div className={`w-5 h-5 rounded-full bg-white absolute top-0.5 transition-all shadow-sm ${audioEnabled ? 'right-0.5' : 'left-0.5'}`} />
           </button>
-        </div>
-
-        {/* Science brief */}
-        <div className="bg-[#111827] border border-[#1E2A3A] rounded-2xl p-4">
-          <p className="text-[#00D4FF] font-bold text-sm mb-2">How it works</p>
-          <p className="text-gray-400 text-xs leading-relaxed">
-            {mode.id === 'theta' && 'Theta waves (4-8 Hz) are associated with deep relaxation and reduced cravings. The entrainment guides your brain into this calm state, where urges naturally dissolve.'}
-            {mode.id === 'alpha' && 'Alpha waves (8-12 Hz) promote relaxed focus and dopamine rebalancing. Regular sessions help restore your brain\'s natural reward sensitivity.'}
-            {mode.id === 'gamma' && 'Gamma waves (30-100 Hz) are linked to cognitive enhancement and neural plasticity. This mode accelerates the rewiring of habitual neural pathways.'}
-            {mode.id === 'delta' && 'Delta waves (0.5-4 Hz) dominate during deep sleep. This mode promotes deep restoration and HGH release critical for neural repair.'}
-            {mode.id === 'beta' && 'Beta waves (13-30 Hz) promote alertness and motivation. Morning sessions build the mental energy to choose your values over impulses.'}
-          </p>
         </div>
 
         {/* Start button */}
         <button
           onClick={startSession}
-          className="w-full py-5 bg-[#00D4FF] text-[#0A0E1A] font-black text-xl rounded-2xl hover:bg-[#00B8E0] transition-all active:scale-95 flex items-center justify-center gap-3 shadow-lg"
-          style={{ boxShadow: '0 0 30px rgba(0,212,255,0.3)' }}
+          className="w-full py-5 btn-primary font-black text-xl flex items-center justify-center gap-3"
+          style={{ boxShadow: '0 0 40px rgba(124,58,237,0.4)' }}
         >
           <Play size={24} fill="currentColor" />
           Begin Session
         </button>
 
-        <p className="text-center text-xs text-gray-700">
+        <p className="text-center text-xs text-white/20">
           Use headphones for full binaural beat effect. Volume at 50-70%. Not for use while driving.
         </p>
       </div>
@@ -549,12 +578,12 @@ function BrainwaveInner() {
 export default function BrainwavePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#0A0E1A] flex items-center justify-center">
+      <div className="min-h-screen bg-[#050810] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/30 flex items-center justify-center animate-pulse">
-            <span className="text-2xl font-black text-[#00D4FF]">🧠</span>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl gradient-primary flex items-center justify-center animate-pulse-glow">
+            <span className="text-2xl font-black text-white">D</span>
           </div>
-          <p className="text-gray-400 text-sm">Loading Brainwave Engine...</p>
+          <p className="gradient-text font-bold text-sm mt-2">Loading Brainwave Engine...</p>
         </div>
       </div>
     }>

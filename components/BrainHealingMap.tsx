@@ -14,18 +14,18 @@ export default function BrainHealingMap({ streakDays }: BrainHealingMapProps) {
   const fullIlluminated = streakDays >= 90;
 
   const milestones = [
-    { day: 3,  label: 'Brain fog lifts',        unlocked: streakDays >= 3 },
-    { day: 7,  label: 'Prefrontal cortex wakes', unlocked: prefrontalLit },
-    { day: 14, label: 'Limbic system calms',     unlocked: limbicCalm },
-    { day: 30, label: 'Reward circuits rewire',  unlocked: rewardRewired },
-    { day: 90, label: 'Full brain illuminated',  unlocked: fullIlluminated },
+    { day: 3,  label: 'Brain fog begins lifting',       unlocked: streakDays >= 3 },
+    { day: 7,  label: 'PIED symptoms begin reversing',  unlocked: prefrontalLit },
+    { day: 14, label: 'Prefrontal cortex reactivating', unlocked: limbicCalm },
+    { day: 30, label: 'Dopamine receptors regenerating', unlocked: rewardRewired },
+    { day: 90, label: 'Full neural rewiring complete',  unlocked: fullIlluminated },
   ];
 
   return (
-    <div className="bg-[#111827] border border-[#1E2A3A] rounded-2xl p-5">
+    <div className="glass p-5">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-white font-bold">Brain Healing Map</h3>
-        <span className="text-[#00D4FF] font-black text-lg">{healingPercent}%</span>
+        <h3 className="text-white font-black">Brain Healing Map</h3>
+        <span className="gradient-text font-black text-lg">{healingPercent}%</span>
       </div>
 
       {/* SVG Brain */}
@@ -110,13 +110,13 @@ export default function BrainHealingMap({ streakDays }: BrainHealingMapProps) {
       <div className="space-y-2">
         {milestones.map((m) => (
           <div key={m.day} className="flex items-center gap-3">
-            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${m.unlocked ? 'bg-[#00D4FF]' : 'bg-[#1E2A3A]'}`} />
-            <span className={`text-xs ${m.unlocked ? 'text-white' : 'text-gray-600'}`}>
+            <div className={`w-2 h-2 rounded-full flex-shrink-0 ${m.unlocked ? 'bg-gradient-to-r from-violet-500 to-cyan-400' : 'bg-white/[0.08]'}`} />
+            <span className={`text-xs ${m.unlocked ? 'text-white font-semibold' : 'text-white/25'}`}>
               Day {m.day}: {m.label}
             </span>
-            {m.unlocked && <span className="text-[#00D4FF] text-xs ml-auto">✓</span>}
+            {m.unlocked && <span className="gradient-text text-xs ml-auto font-bold">✓</span>}
             {!m.unlocked && streakDays < m.day && (
-              <span className="text-gray-600 text-xs ml-auto">{m.day - streakDays}d left</span>
+              <span className="text-white/20 text-xs ml-auto">{m.day - streakDays}d left</span>
             )}
           </div>
         ))}
