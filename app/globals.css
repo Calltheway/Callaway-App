@@ -42,42 +42,77 @@
 }
 
 @layer components {
+  /* Use direct CSS values instead of @apply for custom colors to avoid Tailwind resolution order issues */
   .oracle-card {
-    @apply bg-oracle-card border border-oracle-border rounded-2xl;
+    background-color: #111827;
+    border: 1px solid #1E293B;
+    border-radius: 1rem;
     box-shadow: 0 0 0 1px rgba(0,229,204,0.04), 0 4px 24px rgba(0,0,0,0.4);
   }
 
   .oracle-card-glow {
-    @apply oracle-card;
+    background-color: #111827;
+    border: 1px solid #1E293B;
+    border-radius: 1rem;
     box-shadow: 0 0 0 1px rgba(0,229,204,0.1), 0 4px 32px rgba(0,0,0,0.5), 0 0 60px rgba(0,229,204,0.05);
   }
 
   .oracle-btn-primary {
-    @apply bg-oracle-teal text-oracle-base font-semibold px-6 py-3 rounded-xl
-           hover:bg-oracle-teal-dim transition-all duration-200
-           focus:outline-none focus:ring-2 focus:ring-oracle-teal focus:ring-offset-2 focus:ring-offset-oracle-base;
+    background-color: #00E5CC;
+    color: #080C14;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    border: none;
   }
+  .oracle-btn-primary:hover { background-color: #00B5A0; }
+  .oracle-btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #080C14, 0 0 0 4px #00E5CC;
+  }
+  .oracle-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
   .oracle-btn-ghost {
-    @apply border border-oracle-border text-oracle-text font-medium px-6 py-3 rounded-xl
-           hover:border-oracle-teal/40 hover:text-oracle-bright transition-all duration-200;
+    border: 1px solid #1E293B;
+    color: #CBD5E1;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+  }
+  .oracle-btn-ghost:hover {
+    border-color: rgba(0,229,204,0.4);
+    color: #F1F5F9;
   }
 
   .oracle-label {
-    @apply text-xs font-mono uppercase tracking-widest text-oracle-muted;
+    font-size: 0.65rem;
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #64748B;
   }
 
   .oracle-value {
-    @apply font-mono text-oracle-bright;
+    font-family: 'DM Mono', monospace;
+    color: #F1F5F9;
   }
 
-  .insight-alert   { @apply border-l-2 border-oracle-crimson; }
-  .insight-warning { @apply border-l-2 border-oracle-amber; }
-  .insight-info    { @apply border-l-2 border-oracle-teal; }
+  .insight-alert   { border-left: 2px solid #EF4444; }
+  .insight-warning { border-left: 2px solid #F59E0B; }
+  .insight-info    { border-left: 2px solid #00E5CC; }
 
-  .teal-text     { @apply text-oracle-teal; }
-  .amber-text    { @apply text-oracle-amber; }
-  .crimson-text  { @apply text-oracle-crimson; }
+  .teal-text    { color: #00E5CC; }
+  .amber-text   { color: #F59E0B; }
+  .crimson-text { color: #EF4444; }
 
   .neural-bg {
     background-image:
