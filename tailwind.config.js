@@ -7,47 +7,49 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Primary brand colors
-        navy: {
-          50:  '#E8ECF5',
-          100: '#C5CFDF',
-          200: '#9FAFCD',
-          300: '#7A8FBB',
-          400: '#5F78AD',
-          500: '#4461A0',
-          600: '#3A5593',
-          700: '#2E4783',
-          800: '#223A73',
-          900: '#0F1C3F',  // Primary Navy
-          950: '#0A1229',
+        oracle: {
+          base:       '#080C14',
+          navy:       '#0D1421',
+          card:       '#111827',
+          border:     '#1E293B',
+          teal:       '#00E5CC',
+          'teal-dim': '#00B5A0',
+          amber:      '#F59E0B',
+          crimson:    '#EF4444',
+          muted:      '#64748B',
+          text:       '#CBD5E1',
+          bright:     '#F1F5F9',
         },
-        emerald: {
-          50:  '#E0FAF3',
-          100: '#B3F3E1',
-          200: '#7FECCC',
-          300: '#4BE5B8',
-          400: '#26DEA9',
-          500: '#00C48C',  // Primary Emerald / Accent
-          600: '#00B57F',
-          700: '#00A370',
-          800: '#00915F',
-          900: '#006F47',
-        },
-        // Semantic colors
-        success: '#00C48C',
-        warning: '#FFB020',
-        error:   '#E53935',
-        info:    '#2196F3',
-        // Neutral grays
-        surface: '#F8F9FC',
-        border:  '#E4E8EF',
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['"Playfair Display"', 'Georgia', 'serif'],
+        mono:    ['"DM Mono"', 'monospace'],
+        sans:    ['"DM Sans"', 'system-ui', 'sans-serif'],
       },
-      borderRadius: {
-        '2xl': '16px',
-        '3xl': '24px',
+      backgroundImage: {
+        'oracle-gradient': 'radial-gradient(ellipse at top, #0D1F3C 0%, #080C14 60%)',
+        'teal-glow':       'radial-gradient(circle, rgba(0,229,204,0.15) 0%, transparent 70%)',
+      },
+      boxShadow: {
+        'oracle-card': '0 0 0 1px rgba(0,229,204,0.08), 0 4px 24px rgba(0,0,0,0.4)',
+        'teal-glow':   '0 0 30px rgba(0,229,204,0.2)',
+        'oracle-lg':   '0 0 0 1px rgba(30,41,59,1), 0 20px 60px rgba(0,0,0,0.6)',
+      },
+      animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4,0,0.6,1) infinite',
+        'spin-slow':  'spin 8s linear infinite',
+        'fade-up':    'fadeUp 0.5s ease-out forwards',
+        'glow':       'glow 2s ease-in-out infinite',
+      },
+      keyframes: {
+        fadeUp: {
+          '0%':   { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        glow: {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(0,229,204,0.2)' },
+          '50%':      { boxShadow: '0 0 40px rgba(0,229,204,0.4)' },
+        },
       },
     },
   },
