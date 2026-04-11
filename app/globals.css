@@ -1,18 +1,110 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  html { font-family: 'Inter', system-ui, sans-serif; }
-  body { @apply bg-slate-50 text-navy-900; }
+  :root {
+    --oracle-base:    #080C14;
+    --oracle-navy:    #0D1421;
+    --oracle-card:    #111827;
+    --oracle-border:  #1E293B;
+    --oracle-teal:    #00E5CC;
+    --oracle-amber:   #F59E0B;
+    --oracle-crimson: #EF4444;
+  }
+
+  html {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #080C14;
+    color: #CBD5E1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  * {
+    border-color: #1E293B;
+    scrollbar-width: thin;
+    scrollbar-color: #1E293B transparent;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #2D3F55; }
+
+  ::selection { background: rgba(0, 229, 204, 0.2); color: #00E5CC; }
+}
+
+@layer components {
+  .oracle-card {
+    @apply bg-oracle-card border border-oracle-border rounded-2xl;
+    box-shadow: 0 0 0 1px rgba(0,229,204,0.04), 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  .oracle-card-glow {
+    @apply oracle-card;
+    box-shadow: 0 0 0 1px rgba(0,229,204,0.1), 0 4px 32px rgba(0,0,0,0.5), 0 0 60px rgba(0,229,204,0.05);
+  }
+
+  .oracle-btn-primary {
+    @apply bg-oracle-teal text-oracle-base font-semibold px-6 py-3 rounded-xl
+           hover:bg-oracle-teal-dim transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-oracle-teal focus:ring-offset-2 focus:ring-offset-oracle-base;
+  }
+
+  .oracle-btn-ghost {
+    @apply border border-oracle-border text-oracle-text font-medium px-6 py-3 rounded-xl
+           hover:border-oracle-teal/40 hover:text-oracle-bright transition-all duration-200;
+  }
+
+  .oracle-label {
+    @apply text-xs font-mono uppercase tracking-widest text-oracle-muted;
+  }
+
+  .oracle-value {
+    @apply font-mono text-oracle-bright;
+  }
+
+  .insight-alert   { @apply border-l-2 border-oracle-crimson; }
+  .insight-warning { @apply border-l-2 border-oracle-amber; }
+  .insight-info    { @apply border-l-2 border-oracle-teal; }
+
+  .teal-text     { @apply text-oracle-teal; }
+  .amber-text    { @apply text-oracle-amber; }
+  .crimson-text  { @apply text-oracle-crimson; }
+
+  .neural-bg {
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(0,229,204,0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(0,229,204,0.05) 0%, transparent 40%),
+      radial-gradient(circle at 60% 80%, rgba(13,20,33,0.8) 0%, transparent 60%);
+  }
 }
 
 @layer utilities {
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .text-gradient-teal {
+    background: linear-gradient(135deg, #00E5CC 0%, #00B5A0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .glow-teal {
+    box-shadow: 0 0 30px rgba(0, 229, 204, 0.25);
   }
 }

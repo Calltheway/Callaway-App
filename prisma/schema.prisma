@@ -1,0 +1,125 @@
+// ─────────────────────────────────────────────────────────────────
+// ORACLE — Prisma Schema
+// Run: npx prisma db push  (requires DATABASE_URL env var)
+// ─────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Users ─────────────────────────────────────────────────────────
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String?
+  avatarUrl    String?
+  goals        String?
+  fears        String?
+  lifeContext  Json?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  integrations Integration[]
+  insights     Insight[]
+  lifeScores   LifeScore[]
+  messages     Message[]
+  weeklyReports WeeklyReport[]
+
+  @@map("oracle_users")
+}
+
+// ── Integrations ──────────────────────────────────────────────────
+model Integration {
+  id           String    @id @default(cuid())
+  userId       String
+  type         String    // gmail | calendar | plaid | health | fitbit
+  accessToken  String?
+  refreshToken String?
+  tokenExpiry  DateTime?
+  lastSynced   DateTime?
+  status       String    @default("disconnected") // connected | syncing | error | disconnected
+  metadata     Json?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+  @@map("oracle_integrations")
+}
+
+// ── Insights ──────────────────────────────────────────────────────
+model Insight {
+  id          String    @id @default(cuid())
+  userId      String
+  category    String    // financial | social | health | behavioral | emotional | growth
+  severity    String    @default("info") // info | warning | alert
+  title       String
+  content     String
+  confidence  Float     @default(0.8)
+  dataPoints  Json      @default("[]")
+  action      String?
+  actionType  String?   // cancel | negotiate | reflect | connect | exercise | sleep | ...
+  read        Boolean   @default(false)
+  dismissed   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("oracle_insights")
+}
+
+// ── Life Scores ───────────────────────────────────────────────────
+model LifeScore {
+  id           String    @id @default(cuid())
+  userId       String
+  overall      Int
+  financial    Int
+  social       Int
+  health       Int
+  productivity Int
+  emotional    Int
+  growth       Int
+  weekOf       DateTime
+  notes        String?
+  createdAt    DateTime  @default(now())
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("oracle_life_scores")
+}
+
+// ── Chat Messages ─────────────────────────────────────────────────
+model Message {
+  id        String    @id @default(cuid())
+  userId    String
+  role      String    // user | assistant
+  content   String
+  metadata  Json?
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("oracle_messages")
+}
+
+// ── Weekly Reports ────────────────────────────────────────────────
+model WeeklyReport {
+  id        String    @id @default(cuid())
+  userId    String
+  weekOf    DateTime
+  summary   String
+  highlights Json     @default("[]")
+  patterns  Json      @default("[]")
+  score     Int?
+  createdAt DateTime  @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("oracle_weekly_reports")
+}
