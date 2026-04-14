@@ -18,7 +18,7 @@ const CANNOT_DO = [
 
 export default function OnboardingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-navy-900 to-navy-950 text-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-oracle-navy to-oracle-base text-white flex flex-col">
       {/* Header */}
       <div className="px-6 py-5 border-b border-white/10">
         <div className="max-w-xl mx-auto flex items-center justify-between">

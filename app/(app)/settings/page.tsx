@@ -17,51 +17,56 @@ export default async function SettingsPage() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <h1 className="text-2xl font-black text-navy-900">Settings</h1>
+      <div>
+        <p className="oracle-label mb-1">Oracle Intelligence</p>
+        <h1 className="text-2xl font-black text-oracle-bright">Settings</h1>
+      </div>
 
       {/* Account info */}
-      <Section icon={<Shield size={16} className="text-emerald-500" />} title="Your account">
+      <Section icon={<Shield size={16} className="text-oracle-teal" />} title="Your account">
         <div className="flex items-center justify-between py-3">
           <div>
-            <p className="font-medium text-navy-900 text-sm">Email</p>
-            <p className="text-slate-500 text-sm">{user.email}</p>
+            <p className="font-medium text-oracle-bright text-sm">Email</p>
+            <p className="text-oracle-muted text-sm">{user.email}</p>
           </div>
-          <span className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2.5 py-1 rounded-full">Free plan</span>
+          <span className="bg-oracle-teal/10 text-oracle-teal border border-oracle-teal/20 text-xs font-semibold px-2.5 py-1 rounded-full">
+            Free plan
+          </span>
         </div>
-        <div className="py-3 border-t border-slate-100">
-          <Link href="/pricing" className="text-sm text-emerald-600 font-semibold hover:text-emerald-700">
-            Upgrade to Pro — unlock actions →
+        <div className="py-3 border-t border-oracle-border">
+          <Link href="/pricing" className="text-sm text-oracle-teal font-semibold hover:text-oracle-teal-dim transition-colors">
+            Upgrade to Pro — unlock all actions →
           </Link>
         </div>
       </Section>
 
       {/* Connected banks */}
-      <Section icon={<CreditCard size={16} className="text-emerald-500" />} title="Connected bank accounts">
+      <Section icon={<CreditCard size={16} className="text-oracle-teal" />} title="Connected bank accounts">
         {accounts.length === 0 ? (
           <div className="py-5 text-center">
-            <p className="text-slate-500 text-sm mb-3">No bank accounts connected yet.</p>
+            <p className="text-oracle-muted text-sm mb-3">No bank accounts connected yet.</p>
             <Link
               href="/onboarding/connect-bank"
-              className="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
+              className="text-sm font-semibold text-oracle-teal hover:text-oracle-teal-dim transition-colors"
             >
               + Connect a bank account
             </Link>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-oracle-border">
             {accounts.map((account) => (
               <div key={account.id} className="flex items-center justify-between py-3.5">
                 <div>
-                  <p className="font-medium text-navy-900 text-sm">{account.institution_name}</p>
-                  <p className="text-slate-500 text-xs mt-0.5">{account.account_name} ••••{account.mask}</p>
+                  <p className="font-medium text-oracle-bright text-sm">{account.institution_name}</p>
+                  <p className="text-oracle-muted text-xs mt-0.5">{account.account_name} ••••{account.mask}</p>
                 </div>
-                <button className="text-red-500 hover:text-red-700 text-sm font-medium transition-colors">
+                <button className="text-oracle-crimson hover:text-red-400 text-sm font-medium transition-colors">
                   Disconnect
                 </button>
               </div>
             ))}
-            <div className="pt-3">
-              <Link href="/onboarding/connect-bank" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+            <div className="pt-3 pb-1">
+              <Link href="/onboarding/connect-bank" className="text-sm font-semibold text-oracle-teal hover:text-oracle-teal-dim transition-colors">
                 + Add another bank
               </Link>
             </div>
@@ -70,24 +75,24 @@ export default async function SettingsPage() {
       </Section>
 
       {/* Connected email */}
-      <Section icon={<Bell size={16} className="text-emerald-500" />} title="Connected email accounts">
+      <Section icon={<Bell size={16} className="text-oracle-teal" />} title="Connected email accounts">
         {emailConns.length === 0 ? (
           <div className="py-5 text-center">
-            <p className="text-slate-500 text-sm mb-1">No email connected.</p>
-            <p className="text-slate-400 text-xs mb-3">Email scanning finds ~40% more issues.</p>
-            <Link href="/onboarding/connect-email" className="text-sm font-semibold text-emerald-600 hover:text-emerald-700">
+            <p className="text-oracle-muted text-sm mb-1">No email connected.</p>
+            <p className="text-oracle-muted/60 text-xs mb-3">Email scanning finds ~40% more issues.</p>
+            <Link href="/onboarding/connect-email" className="text-sm font-semibold text-oracle-teal hover:text-oracle-teal-dim transition-colors">
               + Connect email
             </Link>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-oracle-border">
             {emailConns.map((conn) => (
               <div key={conn.id} className="flex items-center justify-between py-3.5">
                 <div>
-                  <p className="font-medium text-navy-900 text-sm">{conn.email_address}</p>
-                  <p className="text-slate-500 text-xs mt-0.5 capitalize">{conn.provider}</p>
+                  <p className="font-medium text-oracle-bright text-sm">{conn.email_address}</p>
+                  <p className="text-oracle-muted text-xs mt-0.5 capitalize">{conn.provider}</p>
                 </div>
-                <button className="text-red-500 hover:text-red-700 text-sm font-medium transition-colors">
+                <button className="text-oracle-crimson hover:text-red-400 text-sm font-medium transition-colors">
                   Disconnect
                 </button>
               </div>
@@ -97,17 +102,17 @@ export default async function SettingsPage() {
       </Section>
 
       {/* Security */}
-      <Section icon={<Lock size={16} className="text-emerald-500" />} title="Security">
-        <div className="divide-y divide-slate-100">
+      <Section icon={<Lock size={16} className="text-oracle-teal" />} title="Security">
+        <div className="divide-y divide-oracle-border">
           {[
-            'Keeper never stores your bank login credentials',
+            'Oracle never stores your bank login credentials',
             'All data is encrypted in transit and at rest',
-            'Bank access is read-only — Keeper cannot move money',
+            'Bank access is read-only — Oracle cannot move money',
             'Disconnect any account instantly at any time',
           ].map((item) => (
             <div key={item} className="flex items-center gap-3 py-3">
-              <span className="text-emerald-500 font-bold text-sm shrink-0">✓</span>
-              <p className="text-slate-600 text-sm">{item}</p>
+              <span className="text-oracle-teal font-bold text-sm shrink-0">✓</span>
+              <p className="text-oracle-text text-sm">{item}</p>
             </div>
           ))}
         </div>
@@ -121,12 +126,20 @@ export default async function SettingsPage() {
   );
 }
 
-function Section({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+function Section({
+  icon,
+  title,
+  children,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-      <div className="flex items-center gap-2.5 px-6 py-4 border-b border-slate-100">
+    <div className="oracle-card overflow-hidden">
+      <div className="flex items-center gap-2.5 px-6 py-4 border-b border-oracle-border">
         {icon}
-        <h2 className="font-bold text-navy-900 text-sm">{title}</h2>
+        <h2 className="font-bold text-oracle-bright text-sm">{title}</h2>
       </div>
       <div className="px-6 py-1">{children}</div>
     </div>

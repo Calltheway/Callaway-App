@@ -50,7 +50,7 @@ export default function FirstScanPage() {
   const progress = Math.min(((step + 1) / STEPS.length) * 100, 100);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-navy-900 to-navy-950 text-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-oracle-navy to-oracle-base text-white flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
         {!done ? (
           <>

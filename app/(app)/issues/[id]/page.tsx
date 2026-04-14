@@ -43,58 +43,66 @@ export default async function IssueDetailPage({
   return (
     <div className="max-w-2xl space-y-6">
       {/* Back */}
-      <Link href="/issues" className="inline-flex items-center gap-1.5 text-slate-500 hover:text-navy-900 text-sm font-medium transition-colors">
+      <Link
+        href="/issues"
+        className="inline-flex items-center gap-1.5 text-oracle-muted hover:text-oracle-bright text-sm font-medium transition-colors"
+      >
         <ArrowLeft size={16} /> Back to Issues
       </Link>
 
       {/* Header card */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
+      <div className="oracle-card p-6">
         <div className="flex items-start justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-black text-navy-900 mb-1">{issue.merchant_name}</h1>
-            <p className="text-slate-500 text-sm">{ISSUE_LABELS[issue.issue_type]}</p>
+            <p className="oracle-label mb-1">{ISSUE_LABELS[issue.issue_type]}</p>
+            <h1 className="text-2xl font-black text-oracle-bright">{issue.merchant_name}</h1>
           </div>
           <StatusBadge status={issue.status} />
         </div>
 
         {/* Cost breakdown */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-navy-900 rounded-xl p-4">
-            <p className="text-white/50 text-xs uppercase tracking-wider mb-1">Monthly cost</p>
-            <p className="text-2xl font-black text-emerald-400">{fmt(issue.monthly_cost)}</p>
+          <div className="bg-oracle-navy rounded-xl p-4 border border-oracle-border">
+            <p className="oracle-label mb-1">Monthly cost</p>
+            <p className="text-2xl font-black text-oracle-teal">{fmt(issue.monthly_cost)}</p>
           </div>
-          <div className="bg-slate-50 rounded-xl p-4">
-            <p className="text-slate-400 text-xs uppercase tracking-wider mb-1">Annual cost</p>
-            <p className="text-2xl font-black text-navy-900">{fmt(issue.annual_cost)}</p>
+          <div className="bg-oracle-navy rounded-xl p-4 border border-oracle-border">
+            <p className="oracle-label mb-1">Annual cost</p>
+            <p className="text-2xl font-black text-oracle-bright">{fmt(issue.annual_cost)}</p>
           </div>
         </div>
       </div>
 
       {/* Explanation */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-        <h2 className="font-bold text-navy-900 mb-3">What's happening</h2>
-        <p className="text-slate-600 leading-relaxed">{issue.plain_english_explanation}</p>
+      <div className="oracle-card p-6">
+        <h2 className="font-bold text-oracle-bright mb-3">What's happening</h2>
+        <p className="text-oracle-text leading-relaxed">{issue.plain_english_explanation}</p>
 
-        <div className="mt-4 flex items-center gap-2 bg-slate-50 rounded-xl px-4 py-2.5 text-sm text-slate-500">
-          <span>Keeper's confidence:</span>
-          <span className="font-semibold text-navy-900">{Math.round(issue.confidence_score * 100)}%</span>
+        <div className="mt-4 flex items-center gap-2 bg-oracle-navy rounded-xl px-4 py-2.5 text-sm border border-oracle-border">
+          <span className="text-oracle-muted">Oracle's confidence:</span>
+          <span className="font-semibold text-oracle-teal">{Math.round(issue.confidence_score * 100)}%</span>
         </div>
       </div>
 
       {/* Difficulty */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-        <h2 className="font-bold text-navy-900 mb-4">How hard is this to fix?</h2>
+      <div className="oracle-card p-6">
+        <h2 className="font-bold text-oracle-bright mb-4">How hard is this to fix?</h2>
         <div className="flex gap-2 mb-3">
           {[1, 2, 3].map((bar) => (
-            <div key={bar} className={`h-2 flex-1 rounded-full ${bar <= diff.bars ? 'bg-emerald-500' : 'bg-slate-200'}`} />
+            <div
+              key={bar}
+              className={`h-2 flex-1 rounded-full transition-colors ${
+                bar <= diff.bars ? 'bg-oracle-teal' : 'bg-oracle-border'
+              }`}
+            />
           ))}
         </div>
-        <p className="text-sm text-slate-500">
-          <span className="font-semibold text-navy-900">{diff.label}</span> — {diff.desc}
+        <p className="text-sm text-oracle-muted">
+          <span className="font-semibold text-oracle-bright">{diff.label}</span> — {diff.desc}
         </p>
       </div>
 
-      {/* Action area (client component for interactivity) */}
+      {/* Action area */}
       <IssueActions issue={issue} />
     </div>
   );

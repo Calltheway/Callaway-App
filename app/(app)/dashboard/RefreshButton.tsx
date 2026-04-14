@@ -21,7 +21,7 @@ export function RefreshButton() {
     <button
       onClick={handleScan}
       disabled={busy}
-      className="inline-flex items-center gap-2 bg-navy-900 hover:bg-navy-700 disabled:opacity-60 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+      className="inline-flex items-center gap-2 oracle-btn-ghost disabled:opacity-60 text-sm font-semibold"
     >
       <RefreshCw size={14} className={busy ? 'animate-spin' : ''} />
       {busy ? 'Scanning…' : 'Re-scan now'}

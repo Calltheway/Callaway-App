@@ -2,10 +2,10 @@ import { clsx } from 'clsx';
 import type { IssueStatus } from '@/types';
 
 const STATUS_STYLES: Record<IssueStatus, string> = {
-  new:         'bg-blue-50 text-blue-700',
-  in_progress: 'bg-amber-50 text-amber-700',
-  resolved:    'bg-emerald-50 text-emerald-700',
-  dismissed:   'bg-slate-100 text-slate-500',
+  new:         'bg-blue-900/30 text-blue-400',
+  in_progress: 'bg-amber-900/30 text-amber-400',
+  resolved:    'bg-oracle-teal/10 text-oracle-teal',
+  dismissed:   'bg-oracle-border text-oracle-muted',
 };
 
 const STATUS_LABELS: Record<IssueStatus, string> = {

@@ -13,11 +13,11 @@ const ACTION_LABELS: Record<string, string> = {
 };
 
 const ACTION_INSTRUCTIONS: Record<string, string> = {
-  cancel: 'To cancel: go to the merchant\'s website → Account Settings → Subscription → Cancel. After cancelling, mark this as resolved below.',
-  dispute: 'To dispute: call the number on the back of your card and say you see an unauthorized charge. Request a chargeback.',
-  claim: 'Contact the merchant directly and reference your original purchase to claim your refund.',
-  switch: 'Research alternative providers to find a better rate, then cancel this service.',
-  review: 'Review the details above and decide if you want to take action.',
+  cancel:    "To cancel: go to the merchant's website → Account Settings → Subscription → Cancel. After cancelling, mark this as resolved below.",
+  dispute:   'To dispute: call the number on the back of your card and say you see an unauthorized charge. Request a chargeback.',
+  claim:     'Contact the merchant directly and reference your original purchase to claim your refund.',
+  switch:    'Research alternative providers to find a better rate, then cancel this service.',
+  review:    'Review the details above and decide if you want to take action.',
   negotiate: '',
 };
 
@@ -57,9 +57,9 @@ export function IssueActions({ issue }: { issue: DetectedIssue }) {
         body:    JSON.stringify({
           status:      'resolved',
           amountSaved: issue.monthly_cost,
-          method:      issue.recommended_action === 'cancel' ? 'cancellation'
+          method:      issue.recommended_action === 'cancel'  ? 'cancellation'
                      : issue.recommended_action === 'dispute' ? 'dispute_won'
-                     : issue.recommended_action === 'claim' ? 'refund_claimed'
+                     : issue.recommended_action === 'claim'   ? 'refund_claimed'
                      : 'manual',
           description: `Resolved ${issue.merchant_name} issue`,
         }),
@@ -83,14 +83,14 @@ export function IssueActions({ issue }: { issue: DetectedIssue }) {
   const instructions = ACTION_INSTRUCTIONS[issue.recommended_action];
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
-      <h2 className="font-bold text-navy-900">Take action</h2>
+    <div className="oracle-card p-6 space-y-4">
+      <h2 className="font-bold text-oracle-bright">Take action</h2>
 
       {resolved ? (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5 text-center">
+        <div className="bg-oracle-teal/10 border border-oracle-teal/30 rounded-xl p-5 text-center">
           <p className="text-3xl mb-2">🎉</p>
-          <p className="font-bold text-emerald-700">Issue resolved!</p>
-          <p className="text-emerald-600 text-sm mt-1">
+          <p className="font-bold text-oracle-teal">Issue resolved!</p>
+          <p className="text-oracle-text text-sm mt-1">
             ${issue.monthly_cost.toFixed(2)}/month saved. Redirecting…
           </p>
         </div>
@@ -98,16 +98,16 @@ export function IssueActions({ issue }: { issue: DetectedIssue }) {
         <>
           {/* Instructions */}
           {instructions && issue.recommended_action !== 'negotiate' && (
-            <div className="bg-slate-50 rounded-xl p-4 text-sm text-slate-600 leading-relaxed">
+            <div className="bg-oracle-navy rounded-xl p-4 text-sm text-oracle-text leading-relaxed border border-oracle-border">
               {instructions}
             </div>
           )}
 
           {/* Negotiation script */}
           {script && (
-            <div className="bg-navy-900 rounded-xl p-5">
-              <p className="text-emerald-400 font-semibold text-sm mb-3">📞 Your negotiation script</p>
-              <p className="text-white/80 text-sm leading-relaxed whitespace-pre-wrap">{script}</p>
+            <div className="bg-oracle-navy rounded-xl p-5 border border-oracle-teal/20">
+              <p className="text-oracle-teal font-semibold text-sm mb-3">📞 Your negotiation script</p>
+              <p className="text-oracle-text text-sm leading-relaxed whitespace-pre-wrap">{script}</p>
             </div>
           )}
 
@@ -116,10 +116,10 @@ export function IssueActions({ issue }: { issue: DetectedIssue }) {
             <button
               onClick={handlePrimaryAction}
               disabled={loading}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:opacity-60 text-white font-bold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm"
+              className="oracle-btn-primary w-full justify-center gap-2 text-sm disabled:opacity-60"
             >
               {loading
-                ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ? <span className="w-4 h-4 border-2 border-oracle-base border-t-transparent rounded-full animate-spin" />
                 : ACTION_LABELS[issue.recommended_action]}
             </button>
           )}
@@ -129,7 +129,7 @@ export function IssueActions({ issue }: { issue: DetectedIssue }) {
             <button
               onClick={handleMarkResolved}
               disabled={loading}
-              className="w-full border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 disabled:opacity-50 font-semibold py-3 rounded-xl transition-colors text-sm"
+              className="w-full border border-oracle-teal/40 text-oracle-teal hover:bg-oracle-teal/10 disabled:opacity-50 font-semibold py-3 rounded-xl transition-colors text-sm"
             >
               ✓ I fixed this — mark as resolved (+${issue.monthly_cost.toFixed(2)} saved)
             </button>
@@ -139,7 +139,7 @@ export function IssueActions({ issue }: { issue: DetectedIssue }) {
           {issue.status !== 'dismissed' && issue.status !== 'resolved' && (
             <button
               onClick={handleDismiss}
-              className="w-full text-slate-400 hover:text-slate-600 py-2 text-sm transition-colors"
+              className="w-full text-oracle-muted hover:text-oracle-text py-2 text-sm transition-colors"
             >
               Dismiss this issue
             </button>
