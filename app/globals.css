@@ -1,145 +1,127 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --oracle-base:    #080C14;
-    --oracle-navy:    #0D1421;
-    --oracle-card:    #111827;
-    --oracle-border:  #1E293B;
-    --oracle-teal:    #00E5CC;
-    --oracle-amber:   #F59E0B;
-    --oracle-crimson: #EF4444;
-  }
-
   html {
     font-family: 'DM Sans', system-ui, sans-serif;
     scroll-behavior: smooth;
   }
 
   body {
-    background-color: #080C14;
-    color: #CBD5E1;
+    background-color: #0A1628;
+    color: #94B0C8;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   * {
-    border-color: #1E293B;
+    border-color: #1E3A5F;
     scrollbar-width: thin;
-    scrollbar-color: #1E293B transparent;
+    scrollbar-color: #1E3A5F transparent;
   }
 
-  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #2D3F55; }
+  ::-webkit-scrollbar-thumb { background: #1E3A5F; border-radius: 3px; }
 
-  ::selection { background: rgba(0, 229, 204, 0.2); color: #00E5CC; }
+  ::selection { background: rgba(0,196,140,0.2); color: #00C48C; }
 }
 
 @layer components {
-  /* Use direct CSS values instead of @apply for custom colors to avoid Tailwind resolution order issues */
-  .oracle-card {
-    background-color: #111827;
-    border: 1px solid #1E293B;
+  .keeper-card {
+    background-color: #132440;
+    border: 1px solid #1E3A5F;
     border-radius: 1rem;
-    box-shadow: 0 0 0 1px rgba(0,229,204,0.04), 0 4px 24px rgba(0,0,0,0.4);
+    box-shadow: 0 0 0 1px rgba(0,196,140,0.04), 0 4px 24px rgba(0,0,0,0.4);
   }
 
-  .oracle-card-glow {
-    background-color: #111827;
-    border: 1px solid #1E293B;
-    border-radius: 1rem;
-    box-shadow: 0 0 0 1px rgba(0,229,204,0.1), 0 4px 32px rgba(0,0,0,0.5), 0 0 60px rgba(0,229,204,0.05);
+  .keeper-card-hero {
+    background: linear-gradient(135deg, #0F2A50 0%, #0A1E3A 100%);
+    border: 1px solid #1E3A5F;
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
   }
 
-  .oracle-btn-primary {
-    background-color: #00E5CC;
-    color: #080C14;
-    font-weight: 600;
+  .keeper-btn-primary {
+    background-color: #00C48C;
+    color: #0A1628;
+    font-weight: 700;
     padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
+    border-radius: 0.875rem;
     transition: all 0.2s;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     border: none;
+    font-size: 0.9rem;
   }
-  .oracle-btn-primary:hover { background-color: #00B5A0; }
-  .oracle-btn-primary:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #080C14, 0 0 0 4px #00E5CC;
-  }
-  .oracle-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .keeper-btn-primary:hover { background-color: #00A070; }
+  .keeper-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-  .oracle-btn-ghost {
-    border: 1px solid #1E293B;
-    color: #CBD5E1;
-    font-weight: 500;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
+  .keeper-btn-secondary {
+    background-color: rgba(0,196,140,0.1);
+    color: #00C48C;
+    font-weight: 600;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.875rem;
+    border: 1px solid rgba(0,196,140,0.25);
     transition: all 0.2s;
     cursor: pointer;
-    background: transparent;
     display: inline-flex;
     align-items: center;
+    font-size: 0.875rem;
   }
-  .oracle-btn-ghost:hover {
-    border-color: rgba(0,229,204,0.4);
-    color: #F1F5F9;
+  .keeper-btn-secondary:hover {
+    background-color: rgba(0,196,140,0.18);
+    border-color: rgba(0,196,140,0.4);
   }
 
-  .oracle-label {
+  .keeper-btn-ghost {
+    background: transparent;
+    color: #94B0C8;
+    font-weight: 500;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.875rem;
+    border: 1px solid #1E3A5F;
+    transition: all 0.2s;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875rem;
+  }
+  .keeper-btn-ghost:hover {
+    border-color: rgba(0,196,140,0.3);
+    color: #E2EEF9;
+  }
+
+  .keeper-label {
     font-size: 0.65rem;
     font-family: 'DM Mono', monospace;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #64748B;
+    letter-spacing: 0.08em;
+    color: #4E6A8A;
   }
 
-  .oracle-value {
-    font-family: 'DM Mono', monospace;
-    color: #F1F5F9;
+  .keeper-input {
+    background-color: #0F1E38;
+    border: 1px solid #1E3A5F;
+    color: #E2EEF9;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+    outline: none;
   }
+  .keeper-input:focus { border-color: rgba(0,196,140,0.5); }
+  .keeper-input::placeholder { color: #4E6A8A; }
 
-  .insight-alert   { border-left: 2px solid #EF4444; }
-  .insight-warning { border-left: 2px solid #F59E0B; }
-  .insight-info    { border-left: 2px solid #00E5CC; }
-
-  .teal-text    { color: #00E5CC; }
-  .amber-text   { color: #F59E0B; }
-  .crimson-text { color: #EF4444; }
-
-  .neural-bg {
-    background-image:
-      radial-gradient(circle at 20% 50%, rgba(0,229,204,0.03) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(0,229,204,0.05) 0%, transparent 40%),
-      radial-gradient(circle at 60% 80%, rgba(13,20,33,0.8) 0%, transparent 60%);
-  }
-}
-
-@layer utilities {
-  .text-gradient-teal {
-    background: linear-gradient(135deg, #00E5CC 0%, #00B5A0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .animate-fade-up {
-    animation: fadeUp 0.5s ease-out forwards;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .glow-teal {
-    box-shadow: 0 0 30px rgba(0, 229, 204, 0.25);
-  }
+  /* Status badges */
+  .badge-new        { background: rgba(239,68,68,0.15);  color: #F87171; }
+  .badge-progress   { background: rgba(245,158,11,0.15); color: #FCD34D; }
+  .badge-resolved   { background: rgba(0,196,140,0.12);  color: #00C48C; }
+  .badge-dismissed  { background: rgba(78,106,138,0.2);  color: #4E6A8A; }
 }

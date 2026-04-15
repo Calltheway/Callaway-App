@@ -1,10 +1,27 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
 
-// Routes that require the user to be logged in
-const PROTECTED = ['/dashboard', '/chat', '/insights', '/integrations', '/profile'];
+// In demo mode (no real Supabase) all app routes are open.
+// When Supabase is configured, these routes require auth.
+const PROTECTED = ['/dashboard', '/findings', '/invest', '/chat', '/profile', '/issues', '/history', '/settings'];
 
 export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+
+  // Redirect / to /dashboard for convenience
+  if (path === '/') {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
+  const supabaseConfigured =
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+
+  if (!supabaseConfigured) {
+    return NextResponse.next();
+  }
+
+  // Real auth check when Supabase is live
+  const { createServerClient } = await import('@supabase/ssr');
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -16,39 +33,23 @@ export async function middleware(request: NextRequest) {
         setAll: (cookiesToSet) => {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           response = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options),
-          );
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         },
       },
     },
   );
 
-  // Skip auth checks when Supabase is not configured (demo mode)
-  const supabaseConfigured =
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
-
   let user = null;
-  if (supabaseConfigured) {
-    try {
-      const { data } = await supabase.auth.getUser();
-      user = data.user;
-    } catch {
-      // Auth check failed — treat as unauthenticated
-    }
-  }
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch { /* network/config error */ }
 
-  const path = request.nextUrl.pathname;
-
-  // Redirect unauthenticated users away from protected routes (only when Supabase is live)
   const isProtected = PROTECTED.some((p) => path.startsWith(p));
-  if (supabaseConfigured && isProtected && !user) {
+  if (isProtected && !user) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
-
-  // Redirect authenticated users away from auth/landing pages
-  if (supabaseConfigured && path === '/sign-in' && user) {
+  if (path === '/sign-in' && user) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
