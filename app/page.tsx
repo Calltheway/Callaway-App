@@ -23,20 +23,7 @@ export default function LandingPage() {
     <div className="relative min-h-screen bg-keeper-void overflow-hidden text-keeper-text">
 
       {/* ── ForceField full-page background ────────────── */}
-      <div className="fixed inset-0 z-0">
-        <ForceFieldBackground
-          hue={151}
-          saturation={85}
-          spacing={11}
-          forceStrength={18}
-          magnifierRadius={220}
-          minStroke={1.5}
-          maxStroke={5}
-          friction={0.88}
-          restoreSpeed={0.04}
-          density={1.8}
-        />
-      </div>
+      <ForceFieldBackground spacing={14} forceRadius={220} forceStrength={16} />
 
       {/* Subtle grid overlay */}
       <div className="fixed inset-0 bg-grid pointer-events-none z-1 opacity-40" />

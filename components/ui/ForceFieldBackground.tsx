@@ -12,15 +12,17 @@ interface Particle {
 }
 
 export function ForceFieldBackground({
-  spacing       = 14,
-  forceRadius   = 180,
-  forceStrength = 12,
+  spacing       = 18,
+  forceRadius   = 200,
+  forceStrength = 14,
   className     = '',
 }: {
   spacing?:       number;
   forceRadius?:   number;
   forceStrength?: number;
   className?:     string;
+  // legacy props ignored:
+  [key: string]: unknown;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef  = useRef({ x: -9999, y: -9999 });
@@ -39,17 +41,17 @@ export function ForceFieldBackground({
     const build = () => {
       particles = [];
       const sp = Math.max(6, spacing);
-      for (let y = 0; y < canvas.height; y += sp) {
-        for (let x = 0; x < canvas.width; x += sp) {
-          const ox = x + (Math.random() - 0.5) * sp * 0.9;
-          const oy = y + (Math.random() - 0.5) * sp * 0.9;
+      for (let y = sp / 2; y < canvas.height; y += sp) {
+        for (let x = sp / 2; x < canvas.width; x += sp) {
+          const ox = x + (Math.random() - 0.5) * sp * 0.6;
+          const oy = y + (Math.random() - 0.5) * sp * 0.6;
           const r  = Math.random();
-          const hue = r < 0.65 ? 151 : r < 0.85 ? 210 : 270; // green / blue / purple
+          const hue = r < 0.60 ? 151 : r < 0.80 ? 210 : 270;
           particles.push({
             x: ox, y: oy, ox, oy,
             vx: 0,  vy: 0,
-            size:  Math.random() * 1.8 + 0.6,
-            alpha: Math.random() * 0.55 + 0.2,
+            size:  Math.random() * 2.2 + 1.0,
+            alpha: Math.random() * 0.5 + 0.35,
             hue,
           });
         }
@@ -73,27 +75,25 @@ export function ForceFieldBackground({
         const dy = p.y - smoothY;
         const d  = Math.sqrt(dx * dx + dy * dy);
 
-        if (d < forceRadius && d > 0.1) {
-          const f = forceStrength / (d * 0.35);
+        if (d < forceRadius && d > 0.5) {
+          const f = forceStrength / (d * 0.3);
           p.vx += (dx / d) * f;
           p.vy += (dy / d) * f;
         }
 
-        // Friction + spring back to origin
-        p.vx = p.vx * 0.88 + (p.ox - p.x) * 0.04;
-        p.vy = p.vy * 0.88 + (p.oy - p.y) * 0.04;
+        p.vx = p.vx * 0.86 + (p.ox - p.x) * 0.045;
+        p.vy = p.vy * 0.86 + (p.oy - p.y) * 0.045;
         p.x += p.vx;
         p.y += p.vy;
 
-        // Grow particles near cursor
         let sz = p.size;
-        if (d < forceRadius) sz *= 1 + 1.8 * (1 - d / forceRadius);
+        if (d < forceRadius) sz *= 1 + 2.2 * (1 - d / forceRadius);
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, sz, 0, Math.PI * 2);
-        ctx.shadowBlur   = sz * 4;
-        ctx.shadowColor  = `hsla(${p.hue},80%,55%,0.9)`;
-        ctx.fillStyle    = `hsla(${p.hue},80%,55%,${p.alpha})`;
+        ctx.shadowBlur  = sz * 6;
+        ctx.shadowColor = `hsla(${p.hue},90%,60%,1)`;
+        ctx.fillStyle   = `hsla(${p.hue},90%,60%,${p.alpha})`;
         ctx.fill();
       }
 
@@ -101,16 +101,22 @@ export function ForceFieldBackground({
     };
 
     const onMove = (e: MouseEvent) => { mouseRef.current = { x: e.clientX, y: e.clientY }; };
+    const onTouch = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (t) mouseRef.current = { x: t.clientX, y: t.clientY };
+    };
 
     resize();
     tick();
     window.addEventListener('resize',    resize);
     window.addEventListener('mousemove', onMove);
+    window.addEventListener('touchmove', onTouch, { passive: true });
 
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize',    resize);
       window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('touchmove', onTouch);
     };
   }, [spacing, forceRadius, forceStrength]);
 
