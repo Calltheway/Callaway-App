@@ -24,23 +24,31 @@ export async function middleware(request: NextRequest) {
     },
   );
 
+  // Skip auth checks when Supabase is not configured (demo mode)
+  const supabaseConfigured =
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+
   let user = null;
-  try {
-    const { data } = await supabase.auth.getUser();
-    user = data.user;
-  } catch {
-    // Auth check failed (e.g. missing/invalid env vars) — treat as unauthenticated
+  if (supabaseConfigured) {
+    try {
+      const { data } = await supabase.auth.getUser();
+      user = data.user;
+    } catch {
+      // Auth check failed — treat as unauthenticated
+    }
   }
+
   const path = request.nextUrl.pathname;
 
-  // Redirect unauthenticated users away from protected routes
+  // Redirect unauthenticated users away from protected routes (only when Supabase is live)
   const isProtected = PROTECTED.some((p) => path.startsWith(p));
-  if (isProtected && !user) {
+  if (supabaseConfigured && isProtected && !user) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 
   // Redirect authenticated users away from auth/landing pages
-  if (path === '/sign-in' && user) {
+  if (supabaseConfigured && path === '/sign-in' && user) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
