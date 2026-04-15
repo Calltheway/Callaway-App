@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Info } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Info, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
 
 interface Scenario {
   id:          string;
@@ -13,11 +13,12 @@ interface Scenario {
   borderColor: string;
 }
 
-interface ETF {
+interface ETFQuote {
   ticker:        string;
   name:          string;
   price:         number;
-  tenYearReturn: number;
+  changePercent: number;
+  live:          boolean;
 }
 
 const SCENARIOS: Scenario[] = [
@@ -59,16 +60,6 @@ const SCENARIOS: Scenario[] = [
   },
 ];
 
-const ETFS: ETF[] = [
-  { ticker: 'VTI',  name: 'Vanguard Total Market',    price: 238.42, tenYearReturn: 0.128  },
-  { ticker: 'QQQ',  name: 'Invesco NASDAQ 100',        price: 471.88, tenYearReturn: 0.181  },
-  { ticker: 'BND',  name: 'Vanguard Total Bond',       price:  73.21, tenYearReturn: 0.024  },
-  { ticker: 'VXUS', name: 'Vanguard Total Intl Stock', price:  60.14, tenYearReturn: 0.054  },
-  { ticker: 'VGT',  name: 'Vanguard Info Technology',  price: 561.30, tenYearReturn: 0.196  },
-  { ticker: 'ARKK', name: 'ARK Innovation',            price:  48.72, tenYearReturn: -0.032 },
-  { ticker: 'SOXX', name: 'iShares Semiconductor',     price: 204.50, tenYearReturn: 0.221  },
-];
-
 function project(monthly: number, rate: number, years: number): number {
   const r = rate / 12;
   return monthly * (((1 + r) ** (years * 12) - 1) / r) * (1 + r);
@@ -85,8 +76,29 @@ export default function InvestPage() {
   const [useCustom, setCustom]   = useState(false);
   const [slider,    setSlider]   = useState(200);
   const [expanded,  setExpanded] = useState<string | null>(null);
+  const [etfs,      setEtfs]     = useState<ETFQuote[]>([]);
+  const [loading,   setLoading]  = useState(true);
+  const [isLive,    setIsLive]   = useState(false);
+  const [lastFetch, setLastFetch] = useState<Date | null>(null);
 
   const amount = useCustom ? slider : monthly;
+
+  const loadPrices = async () => {
+    setLoading(true);
+    try {
+      const res  = await fetch('/api/etf-prices');
+      const json = await res.json() as { data: ETFQuote[]; source: string };
+      setEtfs(json.data);
+      setIsLive(json.source === 'alphavantage');
+      setLastFetch(new Date());
+    } catch {
+      // silently keep previous data
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { loadPrices(); }, []);
 
   return (
     <div className="space-y-6 animate-fade-up">
@@ -114,7 +126,7 @@ export default function InvestPage() {
               <span className="text-keeper-text text-sm">Custom</span>
               <button
                 onClick={() => setCustom(!useCustom)}
-                className={`relative w-11 h-6 rounded-full transition-all border-2 border-transparent ${useCustom ? 'bg-keeper-green shadow-glow-sm' : 'bg-keeper-border'}`}
+                className={`relative w-11 h-6 rounded-full transition-all border-2 border-transparent cursor-pointer ${useCustom ? 'bg-keeper-green shadow-glow-sm' : 'bg-keeper-border'}`}
               >
                 <span className={`inline-block w-5 h-5 bg-white rounded-full shadow transition-transform ${useCustom ? 'translate-x-5' : 'translate-x-0'}`} />
               </button>
@@ -155,7 +167,7 @@ export default function InvestPage() {
               <div key={s.id} className={`glass-card overflow-hidden transition-all ${s.borderColor}`}>
                 <button
                   onClick={() => setExpanded(open ? null : s.id)}
-                  className="w-full p-5 text-left"
+                  className="w-full p-5 text-left cursor-pointer"
                 >
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div>
@@ -168,7 +180,6 @@ export default function InvestPage() {
                     </div>
                   </div>
 
-                  {/* ETF tags */}
                   <div className="flex gap-2 mb-3">
                     {s.etfs.map((etf) => (
                       <span key={etf} className="text-xs font-semibold px-2.5 py-1 rounded-full bg-keeper-surface/80 border border-keeper-border/60 text-keeper-text">
@@ -177,7 +188,6 @@ export default function InvestPage() {
                     ))}
                   </div>
 
-                  {/* 10/20/30yr projections */}
                   <div className="grid grid-cols-3 gap-0 border border-keeper-border/60 rounded-xl overflow-hidden">
                     {[10, 20, 30].map((yr, i) => (
                       <div key={yr} className={`p-3 text-center bg-keeper-surface/60 ${i < 2 ? 'border-r border-keeper-border/60' : ''}`}>
@@ -202,7 +212,7 @@ export default function InvestPage() {
                       ))}
                     </div>
                     <p className="text-keeper-muted text-xs mt-4 leading-relaxed">
-                      Past performance does not guarantee future results. Educational purposes only — not financial advice.
+                      Educational purposes only — not financial advice.
                     </p>
                   </div>
                 )}
@@ -215,29 +225,71 @@ export default function InvestPage() {
       {/* Live ETF prices */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-keeper-bright">ETF Prices</h2>
-          <span className="mono-label">Demo data</span>
+          <div className="flex items-center gap-2">
+            <h2 className="font-semibold text-keeper-bright">ETF Prices</h2>
+            {isLive ? (
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-keeper-green bg-keeper-green/10 border border-keeper-green/20 px-2 py-0.5 rounded-full">
+                <span className="w-1 h-1 rounded-full bg-keeper-green animate-pulse" />
+                Live
+              </span>
+            ) : (
+              <span className="mono-label">Demo data</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {lastFetch && (
+              <span className="mono-label">
+                {lastFetch.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+              </span>
+            )}
+            <button
+              onClick={loadPrices}
+              disabled={loading}
+              className="btn-ghost btn-sm flex items-center gap-1.5 cursor-pointer"
+            >
+              <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
+              Refresh
+            </button>
+          </div>
         </div>
-        <div className="flex gap-3 overflow-x-auto pb-2">
-          {ETFS.map((etf) => (
-            <div key={etf.ticker} className="glass-card card-hover p-4 shrink-0 w-40">
-              <div className="flex items-center justify-between mb-1">
-                <span className="font-bold text-keeper-bright text-sm">{etf.ticker}</span>
-                <span className={`text-xs font-semibold ${etf.tenYearReturn >= 0 ? 'text-keeper-green' : 'text-keeper-red'}`}>
-                  {etf.tenYearReturn >= 0 ? '+' : ''}{(etf.tenYearReturn * 100).toFixed(1)}%
-                </span>
+
+        {loading && etfs.length === 0 ? (
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <div key={i} className="glass-card p-4 shrink-0 w-40 animate-pulse">
+                <div className="h-4 bg-keeper-border/40 rounded mb-2" />
+                <div className="h-3 bg-keeper-border/30 rounded mb-3 w-3/4" />
+                <div className="h-5 bg-keeper-border/40 rounded w-1/2" />
               </div>
-              <p className="text-keeper-muted text-xs mb-2 truncate">{etf.name}</p>
-              <p className="font-semibold text-keeper-bright">${etf.price.toFixed(2)}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {etfs.map((etf) => {
+              const up = etf.changePercent >= 0;
+              return (
+                <div key={etf.ticker} className="glass-card card-hover p-4 shrink-0 w-44">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-keeper-bright text-sm">{etf.ticker}</span>
+                    <span className={`flex items-center gap-0.5 text-xs font-semibold ${up ? 'text-keeper-green' : 'text-keeper-red'}`}>
+                      {up ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+                      {up ? '+' : ''}{etf.changePercent.toFixed(2)}%
+                    </span>
+                  </div>
+                  <p className="text-keeper-muted text-xs mb-2 truncate">{etf.name}</p>
+                  <p className="font-bold text-keeper-bright text-base">${etf.price.toFixed(2)}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Disclaimer */}
       <div className="glass-card flex items-start gap-3 p-4">
         <Info size={14} className="text-keeper-muted mt-0.5 shrink-0" />
         <p className="text-keeper-muted text-xs leading-relaxed">
+          {isLive ? 'Prices from Alpha Vantage · ' : 'Demo prices · '}
           Investment projections use compound monthly growth and are for educational purposes only. Past performance does not guarantee future results. Consult a financial advisor before investing.
         </p>
       </div>
