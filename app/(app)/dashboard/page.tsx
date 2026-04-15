@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { DEMO_ISSUES, DEMO_ACCOUNTS, DEMO_TOTAL_SAVED } from '@/lib/demo-data';
-import { ShieldAlert, TrendingUp, MessageCircle, ChevronRight, Building2, RefreshCw } from 'lucide-react';
+import { ShieldAlert, TrendingUp, MessageCircle, ChevronRight, Building2, RefreshCw, Zap } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,7 +22,7 @@ export default function DashboardPage() {
           <p className="mono-label mb-1">Keeper · Money Intelligence</p>
           <h1 className="text-2xl font-bold text-keeper-bright">Dashboard</h1>
         </div>
-        <button className="btn-ghost btn-sm flex items-center gap-2">
+        <button className="btn-ghost btn-sm flex items-center gap-2 cursor-pointer">
           <RefreshCw size={13} /> Re-scan
         </button>
       </div>
@@ -81,7 +81,7 @@ export default function DashboardPage() {
           { href: '/invest',   icon: TrendingUp,    label: 'Invest Surplus', sub: `${fmt(Math.max(0, 200 - monthlyLeak))}/mo available`,            color: 'text-blue-400',     bg: 'bg-blue-500/10',         border: 'hover:border-blue-400/30'     },
         ].map(({ href, icon: Icon, label, sub, color, bg, border }) => (
           <Link key={href} href={href}>
-            <div className={`glass-card p-4 ${border} transition-all cursor-pointer card-3d`}>
+            <div className={`glass-card p-4 card-hover ${border}`}>
               <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mb-3`}>
                 <Icon size={18} className={color} />
               </div>
@@ -104,7 +104,7 @@ export default function DashboardPage() {
           <div className="space-y-2">
             {topIssues.map((issue) => (
               <Link key={issue.id} href={`/findings/${issue.id}`}>
-                <div className="glass-card px-4 py-3.5 flex items-center gap-4 hover:border-keeper-green/25 transition-all cursor-pointer">
+                <div className="glass-card card-hover px-4 py-3.5 flex items-center gap-4">
                   <div className="flex-1 min-w-0">
                     <p className="text-keeper-bright text-sm font-semibold truncate">{issue.merchant_name}</p>
                     <p className="text-keeper-muted text-xs mt-0.5 truncate">{issue.plain_english_explanation.slice(0, 70)}…</p>

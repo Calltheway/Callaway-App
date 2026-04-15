@@ -220,7 +220,7 @@ export default function InvestPage() {
         </div>
         <div className="flex gap-3 overflow-x-auto pb-2">
           {ETFS.map((etf) => (
-            <div key={etf.ticker} className="glass-card p-4 shrink-0 w-40 card-3d">
+            <div key={etf.ticker} className="glass-card card-hover p-4 shrink-0 w-40">
               <div className="flex items-center justify-between mb-1">
                 <span className="font-bold text-keeper-bright text-sm">{etf.ticker}</span>
                 <span className={`text-xs font-semibold ${etf.tenYearReturn >= 0 ? 'text-keeper-green' : 'text-keeper-red'}`}>

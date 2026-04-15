@@ -134,7 +134,9 @@ export default function FindingDetailPage({ params }: { params: { id: string } }
         <div className="space-y-3">
           {resolved ? (
             <div className="glass-card-glow p-5 text-center">
-              <p className="text-3xl mb-2">🎉</p>
+              <div className="w-10 h-10 rounded-full bg-keeper-green/15 border border-keeper-green/30 flex items-center justify-center mx-auto mb-3">
+                <Check size={18} className="text-keeper-green" />
+              </div>
               <p className="font-bold text-keeper-green">Issue resolved!</p>
               <p className="text-keeper-text text-sm mt-1">{fmt(issue.monthly_cost)}/month saved. Redirecting…</p>
             </div>
@@ -151,7 +153,9 @@ export default function FindingDetailPage({ params }: { params: { id: string } }
         </div>
       ) : (
         <div className="glass-card-glow p-5 flex items-center gap-4">
-          <span className="text-3xl">✅</span>
+          <div className="w-10 h-10 rounded-full bg-keeper-green/15 border border-keeper-green/30 flex items-center justify-center shrink-0">
+            <Check size={18} className="text-keeper-green" />
+          </div>
           <div>
             <p className="font-bold text-keeper-green">Resolved!</p>
             {issue.amount_saved && (

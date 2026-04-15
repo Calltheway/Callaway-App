@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { DEMO_ISSUES } from '@/lib/demo-data';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, AlertTriangle } from 'lucide-react';
 
 const ISSUE_LABELS: Record<string, string> = {
   forgotten_subscription: 'Forgotten Subscription',
@@ -77,7 +77,7 @@ export default async function FindingsPage({
         <div className="glass-card-glow relative overflow-hidden px-5 py-4 flex items-center gap-4">
           <div className="orb w-40 h-40 bg-keeper-red/10 -top-10 -right-10" />
           <div className="relative w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
-            <span className="text-keeper-red text-lg">⚠</span>
+            <AlertTriangle size={18} className="text-keeper-red" />
           </div>
           <div className="relative">
             <p className="mono-label mb-0.5">Potential annual savings</p>
@@ -123,7 +123,7 @@ export default async function FindingsPage({
         <div className="space-y-3">
           {filtered.map((issue) => (
             <Link key={issue.id} href={`/findings/${issue.id}`}>
-              <div className="glass-card card-3d p-5 hover:border-keeper-green/25 transition-all cursor-pointer">
+              <div className="glass-card card-hover p-5">
                 <div className="flex items-start gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -159,7 +159,9 @@ export default async function FindingsPage({
         </div>
       ) : (
         <div className="glass-card p-12 text-center">
-          <p className="text-4xl mb-3">{activeFilter === 'resolved' ? '✅' : '🔍'}</p>
+          <div className="w-12 h-12 rounded-2xl bg-keeper-green/10 border border-keeper-green/20 flex items-center justify-center mx-auto mb-4">
+            <ChevronRight size={20} className="text-keeper-green" />
+          </div>
           <p className="font-bold text-keeper-bright mb-2">
             {activeFilter === 'resolved' ? 'Nothing resolved yet' : 'No issues found'}
           </p>

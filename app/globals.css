@@ -274,4 +274,23 @@
     background-clip: text;
     animation: shimmer 4s linear infinite;
   }
+  .card-hover {
+    transition: transform 0.25s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+    cursor: pointer;
+  }
+  .card-hover:hover {
+    transform: scale(1.02);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,232,122,0.18), 0 0 40px rgba(0,232,122,0.06);
+    border-color: rgba(0,232,122,0.25);
+  }
+}
+
+/* ── Reduced motion ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
