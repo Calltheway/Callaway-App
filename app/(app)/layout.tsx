@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, ShieldAlert, TrendingUp, MessageCircle, User, Shield } from 'lucide-react';
-import { Particles } from '@/components/ui/Particles';
+import { ForceFieldBackground } from '@/components/ui/ForceFieldBackground';
 
 const NAV = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -19,7 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-keeper-void">
       {/* ── Animated background ────────────────────────── */}
-      <Particles count={50} />
+      <ForceFieldBackground spacing={16} forceRadius={160} forceStrength={10} />
       <div className="fixed inset-0 bg-grid pointer-events-none opacity-60 z-0" />
 
       {/* Vivid ambient orbs */}

@@ -2,151 +2,124 @@
 
 import { useEffect, useRef } from 'react';
 
-export interface ForceFieldBackgroundProps {
-  hue?:             number;
-  saturation?:      number;
-  spacing?:         number;
-  minStroke?:       number;
-  maxStroke?:       number;
-  forceStrength?:   number;
-  magnifierRadius?: number;
-  friction?:        number;
-  restoreSpeed?:    number;
-  className?:       string;
+interface Particle {
+  x: number;  y: number;
+  ox: number; oy: number;
+  vx: number; vy: number;
+  size: number;
+  alpha: number;
+  hue: number;
 }
 
 export function ForceFieldBackground({
-  hue             = 151,
-  saturation      = 80,
-  spacing         = 12,
-  minStroke       = 1,
-  maxStroke       = 4,
-  forceStrength   = 15,
-  magnifierRadius = 180,
-  friction        = 0.88,
-  restoreSpeed    = 0.04,
-  className       = '',
-}: ForceFieldBackgroundProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const p5Ref = useRef<any>(null);
-
-  const propsRef = useRef({ hue, saturation, spacing, minStroke, maxStroke, forceStrength, magnifierRadius, friction, restoreSpeed });
-  useEffect(() => {
-    propsRef.current = { hue, saturation, spacing, minStroke, maxStroke, forceStrength, magnifierRadius, friction, restoreSpeed };
-  });
+  spacing       = 14,
+  forceRadius   = 180,
+  forceStrength = 12,
+  className     = '',
+}: {
+  spacing?:       number;
+  forceRadius?:   number;
+  forceStrength?: number;
+  className?:     string;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef  = useRef({ x: -9999, y: -9999 });
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    import('p5').then(({ default: p5 }) => {
-      if (!containerRef.current) return;
-      if (p5Ref.current) { p5Ref.current.remove(); p5Ref.current = null; }
+    let particles: Particle[] = [];
+    let raf: number;
+    let smoothX = -9999;
+    let smoothY = -9999;
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const sketch = (p: any) => {
-        let palette: any[] = [];
-        let points: { pos: any; orig: any; vel: any; brightness: number }[] = [];
-        let mx = 0;
-        let my = 0;
+    const build = () => {
+      particles = [];
+      const sp = Math.max(6, spacing);
+      for (let y = 0; y < canvas.height; y += sp) {
+        for (let x = 0; x < canvas.width; x += sp) {
+          const ox = x + (Math.random() - 0.5) * sp * 0.9;
+          const oy = y + (Math.random() - 0.5) * sp * 0.9;
+          const r  = Math.random();
+          const hue = r < 0.65 ? 151 : r < 0.85 ? 210 : 270; // green / blue / purple
+          particles.push({
+            x: ox, y: oy, ox, oy,
+            vx: 0,  vy: 0,
+            size:  Math.random() * 1.8 + 0.6,
+            alpha: Math.random() * 0.55 + 0.2,
+            hue,
+          });
+        }
+      }
+    };
 
-        p.setup = () => {
-          const { clientWidth, clientHeight } = containerRef.current!;
-          p.createCanvas(clientWidth, clientHeight);
-          mx = p.width / 2;
-          my = p.height / 2;
-          buildPalette();
-          buildPoints();
-        };
+    const resize = () => {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      build();
+    };
 
-        p.windowResized = () => {
-          if (!containerRef.current) return;
-          p.resizeCanvas(containerRef.current.clientWidth, containerRef.current.clientHeight);
-          buildPoints();
-        };
+    const tick = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        function buildPalette() {
-          palette = [];
-          p.push();
-          p.colorMode(p.HSL);
-          const { hue: h, saturation: s } = propsRef.current;
-          for (let i = 0; i < 12; i++) {
-            palette.push(p.color(h, s, p.map(i, 0, 11, 85, 20)));
-          }
-          p.pop();
+      smoothX += (mouseRef.current.x - smoothX) * 0.12;
+      smoothY += (mouseRef.current.y - smoothY) * 0.12;
+
+      for (const p of particles) {
+        const dx = p.x - smoothX;
+        const dy = p.y - smoothY;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+
+        if (d < forceRadius && d > 0.1) {
+          const f = forceStrength / (d * 0.35);
+          p.vx += (dx / d) * f;
+          p.vy += (dy / d) * f;
         }
 
-        function buildPoints() {
-          points = [];
-          const sp = Math.max(4, propsRef.current.spacing);
-          for (let y = 0; y <= p.height; y += sp) {
-            for (let x = 0; x <= p.width; x += sp) {
-              // Perlin noise offset for organic placement
-              const nx = (p.noise(x * 0.004, y * 0.004) - 0.5) * sp * 2;
-              const ny = (p.noise(x * 0.004 + 500, y * 0.004 + 500) - 0.5) * sp * 2;
-              points.push({
-                pos:        p.createVector(x + nx, y + ny),
-                orig:       p.createVector(x + nx, y + ny),
-                vel:        p.createVector(0, 0),
-                brightness: p.random(50, 255),
-              });
-            }
-          }
-        }
+        // Friction + spring back to origin
+        p.vx = p.vx * 0.88 + (p.ox - p.x) * 0.04;
+        p.vy = p.vy * 0.88 + (p.oy - p.y) * 0.04;
+        p.x += p.vx;
+        p.y += p.vy;
 
-        p.draw = () => {
-          p.background(4, 8, 15); // #04080F keeper-void
+        // Grow particles near cursor
+        let sz = p.size;
+        if (d < forceRadius) sz *= 1 + 1.8 * (1 - d / forceRadius);
 
-          // Smooth mouse tracking
-          mx = p.lerp(mx, p.mouseX, 0.12);
-          my = p.lerp(my, p.mouseY, 0.12);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, sz, 0, Math.PI * 2);
+        ctx.shadowBlur   = sz * 4;
+        ctx.shadowColor  = `hsla(${p.hue},80%,55%,0.9)`;
+        ctx.fillStyle    = `hsla(${p.hue},80%,55%,${p.alpha})`;
+        ctx.fill();
+      }
 
-          buildPalette();
-          p.noFill();
-          const pr = propsRef.current;
+      raf = requestAnimationFrame(tick);
+    };
 
-          for (const pt of points) {
-            // Force field repulsion
-            const dir = p5.Vector.sub(pt.pos, p.createVector(mx, my));
-            const d   = dir.mag();
+    const onMove = (e: MouseEvent) => { mouseRef.current = { x: e.clientX, y: e.clientY }; };
 
-            if (d < pr.magnifierRadius) {
-              dir.normalize();
-              pt.vel.add(dir.mult(pr.forceStrength / Math.max(1, d * 0.4)));
-            }
+    resize();
+    tick();
+    window.addEventListener('resize',    resize);
+    window.addEventListener('mousemove', onMove);
 
-            pt.vel.mult(pr.friction);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize',    resize);
+      window.removeEventListener('mousemove', onMove);
+    };
+  }, [spacing, forceRadius, forceStrength]);
 
-            // Spring back to origin
-            const restore = p5.Vector.sub(pt.pos, pt.orig).mult(-pr.restoreSpeed);
-            pt.vel.add(restore);
-            pt.pos.add(pt.vel);
-
-            // Color & size
-            const br       = pt.brightness;
-            const shadeIdx = p.constrain(Math.floor(p.map(br, 0, 255, 0, palette.length - 1)), 0, palette.length - 1);
-            let sw         = p.map(br, 0, 255, pr.minStroke, pr.maxStroke);
-
-            // Enlarge near cursor
-            if (d < pr.magnifierRadius) sw *= p.map(d, 0, pr.magnifierRadius, 2.8, 1);
-
-            if (palette[shadeIdx]) {
-              p.stroke(palette[shadeIdx]);
-              p.strokeWeight(sw);
-              p.point(pt.pos.x, pt.pos.y);
-            }
-          }
-        };
-      };
-
-      p5Ref.current = new p5(sketch, containerRef.current!);
-    }).catch(console.error);
-
-    return () => { p5Ref.current?.remove(); p5Ref.current = null; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return <div ref={containerRef} className={`w-full h-full bg-[#04080F] ${className}`} />;
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`fixed inset-0 pointer-events-none z-0 ${className}`}
+    />
+  );
 }
 
 export default ForceFieldBackground;
