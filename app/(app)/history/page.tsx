@@ -1,27 +1,50 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
 import { getSavingsHistory, getTotalSaved, getThisMonthSaved } from '@/lib/db';
+import {
+  DEMO_SAVINGS_HISTORY,
+  DEMO_TOTAL_SAVED,
+  DEMO_THIS_MONTH_SAVED,
+} from '@/lib/demo-data';
 import { format } from 'date-fns';
 import { ShareButton } from './ShareButton';
+import type { SavingsEvent } from '@/types';
 
 const METHOD_CONFIG = {
-  cancellation:   { label: 'Cancelled',        emoji: '✂️', color: 'bg-red-900/30 text-red-400'       },
-  negotiation:    { label: 'Negotiated',        emoji: '📞', color: 'bg-oracle-teal/10 text-oracle-teal' },
-  dispute_won:    { label: 'Dispute Won',       emoji: '⚖️', color: 'bg-blue-900/30 text-blue-400'     },
-  refund_claimed: { label: 'Refund Claimed',    emoji: '💰', color: 'bg-oracle-teal/10 text-oracle-teal' },
-  manual:         { label: 'Manually Resolved', emoji: '✓',  color: 'bg-oracle-border text-oracle-muted' },
+  cancellation:   { label: 'Cancelled',        emoji: '✂️', bg: 'bg-red-900/30'            },
+  negotiation:    { label: 'Negotiated',        emoji: '📞', bg: 'bg-oracle-teal/10'        },
+  dispute_won:    { label: 'Dispute Won',       emoji: '⚖️', bg: 'bg-blue-900/30'           },
+  refund_claimed: { label: 'Refund Claimed',    emoji: '💰', bg: 'bg-oracle-teal/10'        },
+  manual:         { label: 'Manually Resolved', emoji: '✓',  bg: 'bg-oracle-border'         },
 } as const;
 
-export default async function HistoryPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/sign-in');
+async function loadHistory(): Promise<{
+  history: SavingsEvent[];
+  totalSaved: number;
+  thisMonthSaved: number;
+}> {
+  try {
+    const { createClient } = await import('@/lib/supabase/server');
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const [history, totalSaved, thisMonthSaved] = await Promise.all([
+        getSavingsHistory(user.id),
+        getTotalSaved(user.id),
+        getThisMonthSaved(user.id),
+      ]);
+      return { history, totalSaved, thisMonthSaved };
+    }
+  } catch {
+    // Supabase not configured — fall through to demo data
+  }
+  return {
+    history:        DEMO_SAVINGS_HISTORY,
+    totalSaved:     DEMO_TOTAL_SAVED,
+    thisMonthSaved: DEMO_THIS_MONTH_SAVED,
+  };
+}
 
-  const [history, totalSaved, thisMonthSaved] = await Promise.all([
-    getSavingsHistory(user.id),
-    getTotalSaved(user.id),
-    getThisMonthSaved(user.id),
-  ]);
+export default async function HistoryPage() {
+  const { history, totalSaved, thisMonthSaved } = await loadHistory();
 
   const fmt = (n: number) =>
     n.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 });
@@ -59,10 +82,9 @@ export default async function HistoryPage() {
           <div className="oracle-card divide-y divide-oracle-border overflow-hidden">
             {history.map((event) => {
               const method = METHOD_CONFIG[event.method as keyof typeof METHOD_CONFIG] ?? METHOD_CONFIG.manual;
-              const [bgColor] = method.color.split(' ');
               return (
                 <div key={event.id} className="flex items-center gap-4 p-5">
-                  <div className={`w-11 h-11 rounded-full flex items-center justify-center text-xl shrink-0 ${bgColor}`}>
+                  <div className={`w-11 h-11 rounded-full flex items-center justify-center text-xl shrink-0 ${method.bg}`}>
                     {method.emoji}
                   </div>
                   <div className="flex-1 min-w-0">

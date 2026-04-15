@@ -1,19 +1,27 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
 import { getIssues } from '@/lib/db';
+import { DEMO_ISSUES } from '@/lib/demo-data';
 import { IssueCard } from '@/components/issues/IssueCard';
+import type { DetectedIssue } from '@/types';
+
+async function loadIssues(): Promise<DetectedIssue[]> {
+  try {
+    const { createClient } = await import('@/lib/supabase/server');
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) return getIssues(user.id);
+  } catch {
+    // Supabase not configured — fall through to demo data
+  }
+  return DEMO_ISSUES;
+}
 
 export default async function IssuesPage({
   searchParams,
 }: {
   searchParams: Promise<{ filter?: string }>;
 }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/sign-in');
-
   const { filter } = await searchParams;
-  const issues     = await getIssues(user.id);
+  const issues     = await loadIssues();
 
   const counts = {
     all:         issues.length,
@@ -91,7 +99,7 @@ export default async function IssuesPage({
           </p>
           <p className="text-oracle-muted text-sm leading-relaxed max-w-sm mx-auto">
             {activeFilter === 'all'
-              ? 'Connect a bank account and Oracle will scan for issues automatically. Most users find something in their first scan.'
+              ? 'Connect a bank account and Oracle will scan for issues automatically.'
               : `You don't have any ${activeFilter.replace('_', ' ')} issues right now.`}
           </p>
         </div>

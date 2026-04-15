@@ -1,19 +1,38 @@
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
 import { getAccounts, getEmailConnections } from '@/lib/db';
+import { DEMO_ACCOUNTS, DEMO_EMAIL_CONNECTIONS } from '@/lib/demo-data';
 import { SignOutButton } from './SignOutButton';
 import Link from 'next/link';
 import { Shield, CreditCard, Bell, Lock } from 'lucide-react';
+import type { ConnectedAccount, EmailConnection } from '@/types';
+
+async function loadSettings(): Promise<{
+  userEmail: string;
+  accounts: ConnectedAccount[];
+  emailConns: EmailConnection[];
+}> {
+  try {
+    const { createClient } = await import('@/lib/supabase/server');
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const [accounts, emailConns] = await Promise.all([
+        getAccounts(user.id),
+        getEmailConnections(user.id),
+      ]);
+      return { userEmail: user.email ?? '', accounts, emailConns };
+    }
+  } catch {
+    // Supabase not configured — fall through to demo data
+  }
+  return {
+    userEmail:  'demo@oracle.ai',
+    accounts:   DEMO_ACCOUNTS,
+    emailConns: DEMO_EMAIL_CONNECTIONS,
+  };
+}
 
 export default async function SettingsPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/sign-in');
-
-  const [accounts, emailConns] = await Promise.all([
-    getAccounts(user.id),
-    getEmailConnections(user.id),
-  ]);
+  const { userEmail, accounts, emailConns } = await loadSettings();
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -27,7 +46,7 @@ export default async function SettingsPage() {
         <div className="flex items-center justify-between py-3">
           <div>
             <p className="font-medium text-oracle-bright text-sm">Email</p>
-            <p className="text-oracle-muted text-sm">{user.email}</p>
+            <p className="text-oracle-muted text-sm">{userEmail}</p>
           </div>
           <span className="bg-oracle-teal/10 text-oracle-teal border border-oracle-teal/20 text-xs font-semibold px-2.5 py-1 rounded-full">
             Free plan

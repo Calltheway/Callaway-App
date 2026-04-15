@@ -1,10 +1,11 @@
-import { redirect, notFound } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
 import { getIssueById } from '@/lib/db';
+import { DEMO_ISSUES } from '@/lib/demo-data';
 import { StatusBadge } from '@/components/ui/Badge';
 import { IssueActions } from './IssueActions';
 import { ArrowLeft } from 'lucide-react';
+import type { DetectedIssue } from '@/types';
 
 const ISSUE_LABELS: Record<string, string> = {
   forgotten_subscription: 'Forgotten Subscription',
@@ -24,17 +25,25 @@ const DIFFICULTY: Record<string, { label: string; desc: string; bars: number }> 
   hard:   { label: 'Hard',   desc: 'May require a call or letter', bars: 3 },
 };
 
+async function loadIssue(id: string): Promise<DetectedIssue | null> {
+  try {
+    const { createClient } = await import('@/lib/supabase/server');
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) return getIssueById(id);
+  } catch {
+    // Supabase not configured — fall through to demo data
+  }
+  return DEMO_ISSUES.find((i) => i.id === id) ?? null;
+}
+
 export default async function IssueDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/sign-in');
-
   const { id } = await params;
-  const issue  = await getIssueById(id);
+  const issue  = await loadIssue(id);
   if (!issue) notFound();
 
   const fmt  = (n: number) => n.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
