@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { Shield, ChevronRight, Check, Zap, Brain, TrendingUp, MessageCircle, Search, Lock, ArrowRight } from 'lucide-react';
-import { Particles }        from '@/components/ui/Particles';
-import { TiltCard }         from '@/components/ui/TiltCard';
-import { AnimatedCounter }  from '@/components/ui/AnimatedCounter';
+import { ForceFieldBackground } from '@/components/ui/ForceFieldBackground';
+import { TiltCard }              from '@/components/ui/TiltCard';
+import { AnimatedCounter }       from '@/components/ui/AnimatedCounter';
 
 const ISSUES = [
   { merchant: 'Adobe Creative Cloud', type: 'Forgotten Subscription', monthly: '$54.99', annual: '$659', color: 'text-keeper-red'  },
@@ -22,14 +22,24 @@ export default function LandingPage() {
   return (
     <div className="relative min-h-screen bg-keeper-void overflow-hidden text-keeper-text">
 
-      {/* ── Canvas particles (client component) ────────── */}
-      <Particles count={80} />
+      {/* ── ForceField full-page background ────────────── */}
+      <div className="fixed inset-0 z-0">
+        <ForceFieldBackground
+          hue={151}
+          saturation={85}
+          spacing={11}
+          forceStrength={18}
+          magnifierRadius={220}
+          minStroke={1.5}
+          maxStroke={5}
+          friction={0.88}
+          restoreSpeed={0.04}
+          density={1.8}
+        />
+      </div>
 
-      {/* ── Vivid ambient orbs ─────────────────────────── */}
-      <div className="absolute inset-0 bg-grid pointer-events-none z-0" />
-      <div className="orb w-[900px] h-[900px] bg-keeper-green/20 -top-80 -right-64 animate-float-slow" />
-      <div className="orb w-[700px] h-[700px] bg-keeper-blue/15 bottom-0 -left-48 animate-float" />
-      <div className="orb w-[500px] h-[500px] bg-keeper-purple/12 top-1/3 left-1/3" />
+      {/* Subtle grid overlay */}
+      <div className="fixed inset-0 bg-grid pointer-events-none z-1 opacity-40" />
 
       {/* Full-page scan line */}
       <div className="scan-line z-20" style={{ top: 0, position: 'fixed' }} />
@@ -61,9 +71,6 @@ export default function LandingPage() {
 
           {/* ── HERO — full width ──────────────────────── */}
           <div className="col-span-3 glass-card card-glow-border relative overflow-hidden px-10 py-16 text-center">
-            <div className="orb w-[500px] h-[500px] bg-keeper-green/20 -top-32 left-1/2 -translate-x-1/2" />
-            <div className="orb w-[300px] h-[300px] bg-keeper-blue/15 top-0 -left-32" />
-            <div className="orb w-[300px] h-[300px] bg-keeper-purple/10 top-0 -right-32" />
             <div className="scan-line top-0" />
 
             <div className="relative">
@@ -296,8 +303,6 @@ export default function LandingPage() {
 
           {/* ── CTA — full width ──────────────────────── */}
           <div className="col-span-3 glass-card-glow card-glow-border relative overflow-hidden px-10 py-14 text-center">
-            <div className="orb w-[600px] h-[600px] bg-keeper-green/18 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-            <div className="orb w-[300px] h-[300px] bg-keeper-blue/15 -top-20 -left-20" />
             <div className="scan-line top-0" />
             <div className="relative">
               <p className="mono-label text-keeper-green/70 mb-4">GET STARTED TODAY</p>
