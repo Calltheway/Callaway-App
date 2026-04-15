@@ -4,6 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Animatable CSS custom property for spinning border ─ */
+@property --spin-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 @layer base {
   html { font-family: 'DM Sans', system-ui, sans-serif; scroll-behavior: smooth; }
 
@@ -158,11 +165,44 @@
   .scan-line {
     position: absolute;
     left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,232,122,0.6), transparent);
-    animation: scan 4s linear infinite;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,232,122,0.8) 40%, rgba(0,136,255,0.6) 60%, transparent 100%);
+    animation: scan 3s linear infinite;
     pointer-events: none;
+    box-shadow: 0 0 8px rgba(0,232,122,0.6), 0 0 20px rgba(0,232,122,0.3);
   }
+
+  /* ── Spinning gradient border ────────────────────────── */
+  .card-glow-border {
+    position: relative;
+    isolation: isolate;
+  }
+  .card-glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: inherit;
+    --spin-angle: 0deg;
+    background: conic-gradient(
+      from var(--spin-angle),
+      rgba(0,232,122,0)    0%,
+      rgba(0,232,122,0.9)  15%,
+      rgba(0,136,255,0.7)  30%,
+      rgba(124,58,237,0.5) 45%,
+      rgba(0,232,122,0)    60%
+    );
+    animation: spin-border 3s linear infinite;
+    z-index: -1;
+  }
+  .card-glow-border::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: calc(1.25rem - 1px);
+    background: rgba(13,24,41,0.92);
+    z-index: -1;
+  }
+  @keyframes spin-border { to { --spin-angle: 360deg; } }
 
   /* ── Orb background element ─────────────────────────── */
   .orb {

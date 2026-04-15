@@ -1,8 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import { DEMO_ISSUES, DEMO_ACCOUNTS, DEMO_TOTAL_SAVED } from '@/lib/demo-data';
-import { ShieldAlert, TrendingUp, MessageCircle, ChevronRight, Building2, RefreshCw, Zap } from 'lucide-react';
-
-export const dynamic = 'force-dynamic';
+import { ShieldAlert, TrendingUp, MessageCircle, ChevronRight, Building2, RefreshCw } from 'lucide-react';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
+import { TiltCard }        from '@/components/ui/TiltCard';
 
 export default function DashboardPage() {
   const openIssues   = DEMO_ISSUES.filter((i) => i.status === 'new' || i.status === 'in_progress');
@@ -31,8 +33,9 @@ export default function DashboardPage() {
       <div className="glass-card-glow relative overflow-hidden p-7">
         {/* Scan line inside hero */}
         <div className="scan-line top-0" />
-        {/* Background orb */}
-        <div className="orb w-72 h-72 bg-keeper-green/8 -top-16 -right-16" />
+        {/* Background orbs — vivid */}
+        <div className="orb w-80 h-80 bg-keeper-green/20 -top-16 -right-16" />
+        <div className="orb w-48 h-48 bg-keeper-blue/15 -bottom-8 -left-8" />
 
         <div className="relative">
           <div className="flex items-center gap-2 mb-5">
@@ -45,8 +48,8 @@ export default function DashboardPage() {
               <p className="text-keeper-text text-sm mb-1">
                 Found across {openIssues.length} open issue{openIssues.length !== 1 ? 's' : ''}
               </p>
-              <p className="text-5xl font-black tracking-tight">
-                <span className="glow-text">{fmt(annualLeak)}</span>
+              <p className="text-5xl font-black tracking-tight glow-text">
+                $<AnimatedCounter value={Math.round(annualLeak)} duration={1800} />
                 <span className="text-xl font-normal text-keeper-muted ml-2">/year</span>
               </p>
               <p className="text-keeper-text text-sm mt-1">leaking from your accounts unnecessarily</p>
@@ -59,11 +62,15 @@ export default function DashboardPage() {
           <div className="mt-6 pt-5 border-t border-keeper-border/50 grid grid-cols-3 gap-4">
             <div>
               <p className="mono-label mb-1">Monthly leak</p>
-              <p className="text-keeper-red text-xl font-black">{fmt2(monthlyLeak)}</p>
+              <p className="text-keeper-red text-xl font-black">
+                $<AnimatedCounter value={parseFloat(monthlyLeak.toFixed(2))} decimals={2} duration={1500} />
+              </p>
             </div>
             <div>
               <p className="mono-label mb-1">Total saved</p>
-              <p className="text-keeper-green text-xl font-black">{fmt(DEMO_TOTAL_SAVED)}</p>
+              <p className="text-keeper-green text-xl font-black">
+                $<AnimatedCounter value={DEMO_TOTAL_SAVED} duration={1600} />
+              </p>
             </div>
             <div>
               <p className="mono-label mb-1">Open issues</p>
@@ -81,13 +88,13 @@ export default function DashboardPage() {
           { href: '/invest',   icon: TrendingUp,    label: 'Invest Surplus', sub: `${fmt(Math.max(0, 200 - monthlyLeak))}/mo available`,            color: 'text-blue-400',     bg: 'bg-blue-500/10',         border: 'hover:border-blue-400/30'     },
         ].map(({ href, icon: Icon, label, sub, color, bg, border }) => (
           <Link key={href} href={href}>
-            <div className={`glass-card p-4 card-hover ${border}`}>
+            <TiltCard className={`glass-card p-4 card-hover ${border}`}>
               <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mb-3`}>
                 <Icon size={18} className={color} />
               </div>
               <p className="text-keeper-bright text-sm font-semibold">{label}</p>
               <p className="text-keeper-muted text-xs mt-0.5">{sub}</p>
-            </div>
+            </TiltCard>
           </Link>
         ))}
       </div>
