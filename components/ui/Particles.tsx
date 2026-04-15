@@ -41,10 +41,10 @@ export function Particles({ count = 70 }: { count?: number }) {
       return {
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        r: Math.random() * 1.8 + 0.4,
-        alpha: Math.random() * 0.45 + 0.1,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 2.5 + 0.6,
+        alpha: Math.random() * 0.65 + 0.25,
         colorR, colorG, colorB,
       };
     });
@@ -85,7 +85,7 @@ export function Particles({ count = 70 }: { count?: number }) {
     <canvas
       ref={ref}
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ opacity: 0.6 }}
+      style={{ opacity: 0.9 }}
     />
   );
 }
