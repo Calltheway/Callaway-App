@@ -29,7 +29,7 @@ export default function FindingDetailPage({ params }: { params: { id: string } }
   const issue = DEMO_ISSUES.find((i) => i.id === params.id);
   if (!issue) notFound();
 
-  const [copied, setCopied]   = useState(false);
+  const [copied,   setCopied]   = useState(false);
   const [resolved, setResolved] = useState(false);
   const router = useRouter();
 
@@ -50,55 +50,64 @@ export default function FindingDetailPage({ params }: { params: { id: string } }
   };
 
   return (
-    <div className="max-w-2xl space-y-5">
+    <div className="max-w-2xl space-y-5 animate-fade-up">
       <Link href="/findings" className="inline-flex items-center gap-1.5 text-keeper-muted hover:text-keeper-bright text-sm font-medium transition-colors">
         <ArrowLeft size={15} /> Back to Findings
       </Link>
 
       {/* Header */}
-      <div className="keeper-card p-6">
-        <div className="flex items-start justify-between gap-4 mb-5">
-          <div>
-            <p className="keeper-label mb-1">{ISSUE_LABELS[issue.issue_type]}</p>
-            <h1 className="text-2xl font-bold text-keeper-bright">{issue.merchant_name}</h1>
+      <div className="glass-card-glow relative overflow-hidden p-6">
+        <div className="orb w-48 h-48 bg-keeper-green/8 -top-12 -right-12" />
+        <div className="relative">
+          <div className="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <p className="mono-label mb-1">{ISSUE_LABELS[issue.issue_type]}</p>
+              <h1 className="text-2xl font-bold text-keeper-bright">{issue.merchant_name}</h1>
+            </div>
+            <span className={`text-xs font-semibold px-3 py-1.5 rounded-full shrink-0 ${
+              issue.status === 'new'         ? 'badge-new'      :
+              issue.status === 'in_progress' ? 'badge-progress' :
+              issue.status === 'resolved'    ? 'badge-resolved' : 'badge-dismissed'
+            }`}>
+              {issue.status === 'in_progress' ? 'In Progress' : issue.status.charAt(0).toUpperCase() + issue.status.slice(1)}
+            </span>
           </div>
-          <span className={`text-xs font-semibold px-3 py-1.5 rounded-full shrink-0 ${
-            issue.status === 'new'         ? 'badge-new'      :
-            issue.status === 'in_progress' ? 'badge-progress' :
-            issue.status === 'resolved'    ? 'badge-resolved' : 'badge-dismissed'
-          }`}>
-            {issue.status === 'in_progress' ? 'In Progress' : issue.status.charAt(0).toUpperCase() + issue.status.slice(1)}
-          </span>
-        </div>
 
-        <div className="grid grid-cols-2 gap-3">
-          <div className="bg-keeper-surface rounded-xl p-4 border border-keeper-border">
-            <p className="keeper-label mb-1">Monthly cost</p>
-            <p className="text-2xl font-black text-keeper-green">{fmt(issue.monthly_cost)}</p>
-          </div>
-          <div className="bg-keeper-surface rounded-xl p-4 border border-keeper-border">
-            <p className="keeper-label mb-1">Annual cost</p>
-            <p className="text-2xl font-black text-keeper-bright">{fmt(issue.annual_cost)}</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-keeper-surface/80 rounded-xl p-4 border border-keeper-border/60">
+              <p className="mono-label mb-1">Monthly cost</p>
+              <p className="text-2xl font-black text-keeper-red">{fmt(issue.monthly_cost)}</p>
+            </div>
+            <div className="bg-keeper-surface/80 rounded-xl p-4 border border-keeper-border/60">
+              <p className="mono-label mb-1">Annual cost</p>
+              <p className="text-2xl font-black text-keeper-bright">{fmt(issue.annual_cost)}</p>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Explanation */}
-      <div className="keeper-card p-6">
+      <div className="glass-card p-6">
         <h2 className="font-semibold text-keeper-bright mb-3">What Keeper Found</h2>
         <p className="text-keeper-text leading-relaxed">{issue.plain_english_explanation}</p>
-        <div className="mt-4 flex items-center gap-2 bg-keeper-surface rounded-xl px-4 py-2.5 border border-keeper-border">
-          <span className="text-keeper-text text-sm">Confidence:</span>
+        <div className="mt-4 flex items-center gap-3 bg-keeper-green/5 border border-keeper-green/20 rounded-xl px-4 py-2.5">
+          <span className="text-keeper-text text-sm">AI Confidence:</span>
+          <div className="flex-1 h-1.5 bg-keeper-border/60 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-keeper-green rounded-full"
+              style={{ width: `${Math.round(issue.confidence_score * 100)}%` }}
+            />
+          </div>
           <span className="font-semibold text-keeper-green text-sm">{Math.round(issue.confidence_score * 100)}%</span>
         </div>
       </div>
 
       {/* Difficulty */}
-      <div className="keeper-card p-6">
+      <div className="glass-card p-6">
         <h2 className="font-semibold text-keeper-bright mb-4">How hard is this to fix?</h2>
         <div className="flex gap-2 mb-3">
           {[1, 2, 3].map((bar) => (
-            <div key={bar} className={`h-2 flex-1 rounded-full ${bar <= diff.bars ? 'bg-keeper-green' : 'bg-keeper-border'}`} />
+            <div key={bar} className={`h-2 flex-1 rounded-full transition-all ${bar <= diff.bars ? 'bg-keeper-green shadow-glow-sm' : 'bg-keeper-border/60'}`} />
           ))}
         </div>
         <p className="text-sm text-keeper-text">
@@ -108,13 +117,13 @@ export default function FindingDetailPage({ params }: { params: { id: string } }
 
       {/* Negotiation script */}
       {issue.recommended_action === 'negotiate' && (
-        <div className="keeper-card p-6">
+        <div className="glass-card p-6">
           <h2 className="font-semibold text-keeper-bright mb-3">Negotiation Script</h2>
-          <div className="bg-keeper-surface rounded-xl p-4 border border-keeper-border text-keeper-text text-sm leading-relaxed mb-3">
+          <div className="bg-keeper-surface/80 rounded-xl p-4 border border-keeper-border/60 text-keeper-text text-sm leading-relaxed mb-3 font-mono">
             {demoScript}
           </div>
-          <button onClick={handleCopy} className="keeper-btn-secondary flex items-center gap-2">
-            {copied ? <Check size={14} /> : <Copy size={14} />}
+          <button onClick={handleCopy} className="btn-ghost btn-sm flex items-center gap-2">
+            {copied ? <Check size={14} className="text-keeper-green" /> : <Copy size={14} />}
             {copied ? 'Copied!' : 'Copy Script'}
           </button>
         </div>
@@ -124,24 +133,24 @@ export default function FindingDetailPage({ params }: { params: { id: string } }
       {issue.status !== 'resolved' ? (
         <div className="space-y-3">
           {resolved ? (
-            <div className="keeper-card p-5 text-center border-keeper-green/30">
+            <div className="glass-card-glow p-5 text-center">
               <p className="text-3xl mb-2">🎉</p>
               <p className="font-bold text-keeper-green">Issue resolved!</p>
               <p className="text-keeper-text text-sm mt-1">{fmt(issue.monthly_cost)}/month saved. Redirecting…</p>
             </div>
           ) : (
             <>
-              <button onClick={handleResolve} className="keeper-btn-primary w-full justify-center gap-2">
-                ✓ Mark as Resolved — save {fmt(issue.monthly_cost)}/mo
+              <button onClick={handleResolve} className="btn-primary w-full justify-center gap-2">
+                <Check size={16} /> Mark as Resolved — save {fmt(issue.monthly_cost)}/mo
               </button>
               <Link href="/findings">
-                <button className="keeper-btn-ghost w-full justify-center text-sm">Dismiss</button>
+                <button className="btn-ghost w-full justify-center text-sm">Dismiss</button>
               </Link>
             </>
           )}
         </div>
       ) : (
-        <div className="keeper-card p-5 flex items-center gap-4 border-keeper-green/30">
+        <div className="glass-card-glow p-5 flex items-center gap-4">
           <span className="text-3xl">✅</span>
           <div>
             <p className="font-bold text-keeper-green">Resolved!</p>

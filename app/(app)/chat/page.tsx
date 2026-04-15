@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, RotateCcw } from 'lucide-react';
+import { Send, RotateCcw, Zap } from 'lucide-react';
 
 interface Message {
   role:      'user' | 'assistant';
@@ -122,10 +122,13 @@ export default function ChatPage() {
     <div className="flex flex-col h-[calc(100vh-4rem)] -my-8 -mx-8">
 
       {/* Top bar */}
-      <div className="flex items-center justify-between px-8 py-4 border-b border-keeper-border bg-keeper-base/80 backdrop-blur-sm shrink-0">
+      <div className="flex items-center justify-between px-8 py-4 border-b border-keeper-border/50 bg-keeper-void/80 backdrop-blur-xl shrink-0">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-keeper-green/10 border border-keeper-green/25 flex items-center justify-center">
-            <span className="text-keeper-green font-black text-sm">K</span>
+          <div className="relative">
+            <div className="absolute inset-0 rounded-xl bg-keeper-green/20 blur-md" />
+            <div className="relative w-9 h-9 rounded-xl bg-keeper-green/10 border border-keeper-green/25 flex items-center justify-center">
+              <span className="text-keeper-green font-black text-sm">K</span>
+            </div>
           </div>
           <div>
             <h1 className="font-bold text-keeper-bright">Ask Keeper AI</h1>
@@ -133,7 +136,10 @@ export default function ChatPage() {
           </div>
         </div>
         {messages.length > 0 && (
-          <button onClick={() => !isStreaming && setMessages([])} className="keeper-btn-ghost flex items-center gap-2 text-xs px-3 py-2">
+          <button
+            onClick={() => !isStreaming && setMessages([])}
+            className="btn-ghost btn-sm flex items-center gap-2"
+          >
             <RotateCcw size={12} /> Clear
           </button>
         )}
@@ -144,22 +150,25 @@ export default function ChatPage() {
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-8 pb-12">
             <div className="text-center space-y-3">
-              <div className="w-16 h-16 rounded-2xl bg-keeper-green/10 border border-keeper-green/25 flex items-center justify-center mx-auto">
-                <span className="text-keeper-green font-black text-2xl">K</span>
+              <div className="relative mx-auto w-16 h-16">
+                <div className="absolute inset-0 rounded-2xl bg-keeper-green/20 blur-xl animate-glow-pulse" />
+                <div className="relative w-16 h-16 rounded-2xl bg-keeper-green/10 border border-keeper-green/25 flex items-center justify-center">
+                  <span className="text-keeper-green font-black text-2xl">K</span>
+                </div>
               </div>
               <h2 className="text-xl font-bold text-keeper-bright">Your financial AI</h2>
               <p className="text-keeper-text text-sm max-w-sm">Ask anything about your money, subscriptions, or investments.</p>
             </div>
             <div className="flex flex-col gap-2 w-full max-w-md">
-              <p className="keeper-label text-center mb-1">SUGGESTED</p>
+              <p className="mono-label text-center mb-1">Suggested</p>
               {SUGGESTED_PROMPTS.map((p) => (
                 <button
                   key={p}
                   onClick={() => sendMessage(p)}
-                  className="keeper-card px-4 py-3 text-left flex items-center justify-between gap-3 hover:border-keeper-green/30 transition-colors"
+                  className="glass-card px-4 py-3 text-left flex items-center justify-between gap-3 hover:border-keeper-green/30 transition-all"
                 >
                   <span className="text-keeper-text text-sm">{p}</span>
-                  <span className="text-keeper-green text-xs shrink-0">↗</span>
+                  <Zap size={13} className="text-keeper-green shrink-0" />
                 </button>
               ))}
             </div>
@@ -167,21 +176,24 @@ export default function ChatPage() {
         ) : (
           <>
             {messages.map((msg, i) => {
-              const isUser    = msg.role === 'user';
-              const isLast    = i === messages.length - 1;
-              const showDots  = !isUser && isLast && isStreaming && msg.content === '';
+              const isUser   = msg.role === 'user';
+              const isLast   = i === messages.length - 1;
+              const showDots = !isUser && isLast && isStreaming && msg.content === '';
               return (
                 <div key={i} className={`flex gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}>
                   {!isUser && (
-                    <div className="w-8 h-8 rounded-xl bg-keeper-green/10 border border-keeper-green/25 flex items-center justify-center shrink-0 mt-1">
-                      <span className="text-keeper-green font-black text-xs">K</span>
+                    <div className="relative shrink-0 mt-1">
+                      <div className="absolute inset-0 rounded-xl bg-keeper-green/15 blur-md" />
+                      <div className="relative w-8 h-8 rounded-xl bg-keeper-green/10 border border-keeper-green/25 flex items-center justify-center">
+                        <span className="text-keeper-green font-black text-xs">K</span>
+                      </div>
                     </div>
                   )}
                   <div className={`max-w-[75%] space-y-1 flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
                     <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                       isUser
                         ? 'bg-keeper-green/10 border border-keeper-green/25 text-keeper-bright'
-                        : 'bg-keeper-card border border-keeper-border text-keeper-text'
+                        : 'glass-card text-keeper-text'
                     }`}>
                       {showDots ? <TypingDots /> : msg.content.split('\n').map((line, j, arr) => (
                         <span key={j}>{line}{j < arr.length - 1 && <br />}</span>
@@ -191,8 +203,8 @@ export default function ChatPage() {
                     <span className="text-keeper-muted text-xs px-1">{fmt(msg.timestamp)}</span>
                   </div>
                   {isUser && (
-                    <div className="w-8 h-8 rounded-xl bg-keeper-border/60 flex items-center justify-center shrink-0 mt-1">
-                      <span className="text-xs text-keeper-text">Y</span>
+                    <div className="w-8 h-8 rounded-xl bg-keeper-surface border border-keeper-border/60 flex items-center justify-center shrink-0 mt-1">
+                      <span className="text-xs text-keeper-text font-bold">Y</span>
                     </div>
                   )}
                 </div>
@@ -204,7 +216,7 @@ export default function ChatPage() {
       </div>
 
       {/* Input */}
-      <div className="shrink-0 border-t border-keeper-border bg-keeper-base/80 backdrop-blur-sm px-8 py-4">
+      <div className="shrink-0 border-t border-keeper-border/50 bg-keeper-void/80 backdrop-blur-xl px-8 py-4">
         {isStreaming && (
           <div className="flex items-center gap-2 mb-2 text-xs text-keeper-muted">
             <span className="w-1.5 h-1.5 rounded-full bg-keeper-green animate-pulse" />
@@ -221,12 +233,12 @@ export default function ChatPage() {
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(input); } }}
             onInput={(e) => { const t = e.target as HTMLTextAreaElement; t.style.height = 'auto'; t.style.height = `${Math.min(t.scrollHeight, 140)}px`; }}
             placeholder="Ask Keeper anything…"
-            className="keeper-input flex-1 resize-none min-h-[48px] max-h-36 leading-relaxed focus:border-keeper-green/50 disabled:opacity-50"
+            className="glass-input flex-1 resize-none min-h-[48px] max-h-36 leading-relaxed disabled:opacity-50"
           />
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isStreaming}
-            className="keeper-btn-primary flex items-center gap-2 py-3 px-5 shrink-0 disabled:opacity-40"
+            className="btn-primary flex items-center gap-2 py-3 px-5 shrink-0 disabled:opacity-40"
           >
             <Send size={15} />
           </button>

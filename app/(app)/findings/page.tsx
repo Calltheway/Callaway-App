@@ -61,9 +61,9 @@ export default async function FindingsPage({
     n.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-up">
       <div>
-        <p className="keeper-label mb-1">Keeper · Findings</p>
+        <p className="mono-label mb-1">Keeper · Findings</p>
         <h1 className="text-2xl font-bold text-keeper-bright">Findings</h1>
         <p className="text-keeper-text text-sm mt-0.5">
           {counts.new > 0
@@ -74,12 +74,13 @@ export default async function FindingsPage({
 
       {/* Savings banner */}
       {openAnnual > 0 && activeFilter !== 'resolved' && (
-        <div className="keeper-card px-5 py-4 flex items-center gap-4 border-keeper-red/30">
-          <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center shrink-0">
+        <div className="glass-card-glow relative overflow-hidden px-5 py-4 flex items-center gap-4">
+          <div className="orb w-40 h-40 bg-keeper-red/10 -top-10 -right-10" />
+          <div className="relative w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0">
             <span className="text-keeper-red text-lg">⚠</span>
           </div>
-          <div>
-            <p className="keeper-label mb-0.5">Potential annual savings</p>
+          <div className="relative">
+            <p className="mono-label mb-0.5">Potential annual savings</p>
             <p className="text-keeper-red text-2xl font-black">{fmt(openAnnual)}</p>
           </div>
         </div>
@@ -98,16 +99,16 @@ export default async function FindingsPage({
             <a
               key={key}
               href={key === 'all' ? '/findings' : `/findings?filter=${key}`}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all ${
                 active
-                  ? 'bg-keeper-green text-keeper-base border-keeper-green'
-                  : 'bg-keeper-card text-keeper-text border-keeper-border hover:border-keeper-green/40 hover:text-keeper-bright'
+                  ? 'bg-keeper-green text-keeper-void border-keeper-green shadow-glow-sm'
+                  : 'bg-keeper-card/60 backdrop-blur-sm text-keeper-text border-keeper-border hover:border-keeper-green/40 hover:text-keeper-bright'
               }`}
             >
               {label}
               {count > 0 && (
                 <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${
-                  active ? 'bg-keeper-base/30 text-keeper-base' : 'bg-keeper-border text-keeper-muted'
+                  active ? 'bg-keeper-void/30 text-keeper-void' : 'bg-keeper-border text-keeper-muted'
                 }`}>
                   {count}
                 </span>
@@ -122,7 +123,7 @@ export default async function FindingsPage({
         <div className="space-y-3">
           {filtered.map((issue) => (
             <Link key={issue.id} href={`/findings/${issue.id}`}>
-              <div className="keeper-card p-5 hover:border-keeper-green/25 transition-colors cursor-pointer">
+              <div className="glass-card card-3d p-5 hover:border-keeper-green/25 transition-all cursor-pointer">
                 <div className="flex items-start gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -135,18 +136,18 @@ export default async function FindingsPage({
                         {issue.status === 'in_progress' ? 'In Progress' : issue.status.charAt(0).toUpperCase() + issue.status.slice(1)}
                       </span>
                     </div>
-                    <p className="keeper-label mb-2">{ISSUE_LABELS[issue.issue_type]}</p>
+                    <p className="mono-label mb-2">{ISSUE_LABELS[issue.issue_type]}</p>
                     <p className="text-keeper-text text-sm line-clamp-2 leading-relaxed">
                       {issue.plain_english_explanation}
                     </p>
                   </div>
                   <div className="text-right shrink-0">
                     <p className="text-keeper-red font-black text-lg">{fmt2(issue.monthly_cost)}<span className="text-xs font-normal text-keeper-muted">/mo</span></p>
-                    <p className="keeper-label">{fmt(issue.annual_cost)}/yr</p>
+                    <p className="mono-label">{fmt(issue.annual_cost)}/yr</p>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-keeper-border flex items-center justify-between">
+                <div className="mt-4 pt-3 border-t border-keeper-border/50 flex items-center justify-between">
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${DIFFICULTY_COLOR[issue.action_difficulty]}`}>
                     {ACTION_LABELS[issue.recommended_action]} · {issue.action_difficulty}
                   </span>
@@ -157,7 +158,7 @@ export default async function FindingsPage({
           ))}
         </div>
       ) : (
-        <div className="keeper-card p-12 text-center">
+        <div className="glass-card p-12 text-center">
           <p className="text-4xl mb-3">{activeFilter === 'resolved' ? '✅' : '🔍'}</p>
           <p className="font-bold text-keeper-bright mb-2">
             {activeFilter === 'resolved' ? 'Nothing resolved yet' : 'No issues found'}

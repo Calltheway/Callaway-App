@@ -7,11 +7,6 @@ const PROTECTED = ['/dashboard', '/findings', '/invest', '/chat', '/profile', '/
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  // Redirect / to /dashboard for convenience
-  if (path === '/') {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
-
   const supabaseConfigured =
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
     !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');

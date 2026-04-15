@@ -19,49 +19,56 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="keeper-label mb-1">Keeper · Money Intelligence</p>
+          <p className="mono-label mb-1">Keeper · Money Intelligence</p>
           <h1 className="text-2xl font-bold text-keeper-bright">Dashboard</h1>
         </div>
-        <button className="keeper-btn-ghost flex items-center gap-2 text-xs">
+        <button className="btn-ghost btn-sm flex items-center gap-2">
           <RefreshCw size={13} /> Re-scan
         </button>
       </div>
 
       {/* Hero card */}
-      <div className="keeper-card-hero p-7">
-        <div className="flex items-center gap-2 mb-5">
-          <span className="w-2 h-2 rounded-full bg-keeper-green animate-pulse-slow" />
-          <span className="keeper-label text-keeper-green/80">Keeper is watching</span>
-        </div>
+      <div className="glass-card-glow relative overflow-hidden p-7">
+        {/* Scan line inside hero */}
+        <div className="scan-line top-0" />
+        {/* Background orb */}
+        <div className="orb w-72 h-72 bg-keeper-green/8 -top-16 -right-16" />
 
-        {openIssues.length > 0 ? (
-          <>
-            <p className="text-keeper-text text-sm mb-1">
-              Found across {openIssues.length} open issue{openIssues.length !== 1 ? 's' : ''}
-            </p>
-            <p className="text-5xl font-black text-keeper-bright tracking-tight">
-              {fmt(annualLeak)}
-              <span className="text-xl font-normal text-keeper-muted ml-2">/year</span>
-            </p>
-            <p className="text-keeper-text text-sm mt-1">leaking from your accounts unnecessarily</p>
-          </>
-        ) : (
-          <p className="text-2xl font-bold text-keeper-bright">All clear — no issues found</p>
-        )}
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-5">
+            <span className="w-2 h-2 rounded-full bg-keeper-green animate-pulse" />
+            <span className="mono-label text-keeper-green/80">Keeper is watching</span>
+          </div>
 
-        {/* Stats row */}
-        <div className="mt-6 pt-5 border-t border-keeper-border/60 grid grid-cols-3 gap-4">
-          <div>
-            <p className="keeper-label mb-1">Monthly leak</p>
-            <p className="text-keeper-red text-xl font-black">{fmt2(monthlyLeak)}</p>
-          </div>
-          <div>
-            <p className="keeper-label mb-1">Total saved</p>
-            <p className="text-keeper-green text-xl font-black">{fmt(DEMO_TOTAL_SAVED)}</p>
-          </div>
-          <div>
-            <p className="keeper-label mb-1">Open issues</p>
-            <p className="text-keeper-bright text-xl font-black">{openIssues.length}</p>
+          {openIssues.length > 0 ? (
+            <>
+              <p className="text-keeper-text text-sm mb-1">
+                Found across {openIssues.length} open issue{openIssues.length !== 1 ? 's' : ''}
+              </p>
+              <p className="text-5xl font-black tracking-tight">
+                <span className="glow-text">{fmt(annualLeak)}</span>
+                <span className="text-xl font-normal text-keeper-muted ml-2">/year</span>
+              </p>
+              <p className="text-keeper-text text-sm mt-1">leaking from your accounts unnecessarily</p>
+            </>
+          ) : (
+            <p className="text-2xl font-bold text-keeper-bright">All clear — no issues found</p>
+          )}
+
+          {/* Stats row */}
+          <div className="mt-6 pt-5 border-t border-keeper-border/50 grid grid-cols-3 gap-4">
+            <div>
+              <p className="mono-label mb-1">Monthly leak</p>
+              <p className="text-keeper-red text-xl font-black">{fmt2(monthlyLeak)}</p>
+            </div>
+            <div>
+              <p className="mono-label mb-1">Total saved</p>
+              <p className="text-keeper-green text-xl font-black">{fmt(DEMO_TOTAL_SAVED)}</p>
+            </div>
+            <div>
+              <p className="mono-label mb-1">Open issues</p>
+              <p className="text-keeper-bright text-xl font-black">{openIssues.length}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -69,12 +76,12 @@ export default function DashboardPage() {
       {/* Quick actions */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { href: '/findings', icon: ShieldAlert,   label: 'View Findings',  sub: `${openIssues.length} need action`,     color: 'text-keeper-red',   bg: 'bg-red-500/10'           },
-          { href: '/chat',     icon: MessageCircle, label: 'Ask Keeper AI',  sub: 'Get financial advice',                  color: 'text-keeper-green', bg: 'bg-keeper-green/10'      },
-          { href: '/invest',   icon: TrendingUp,    label: 'Invest Surplus', sub: `${fmt(Math.max(0, 200 - monthlyLeak))}/mo available`, color: 'text-blue-400',  bg: 'bg-blue-500/10' },
-        ].map(({ href, icon: Icon, label, sub, color, bg }) => (
+          { href: '/findings', icon: ShieldAlert,   label: 'View Findings',  sub: `${openIssues.length} need action`,                              color: 'text-keeper-red',   bg: 'bg-red-500/10',          border: 'hover:border-keeper-red/30'   },
+          { href: '/chat',     icon: MessageCircle, label: 'Ask Keeper AI',  sub: 'Get financial advice',                                           color: 'text-keeper-green', bg: 'bg-keeper-green/10',     border: 'hover:border-keeper-green/30' },
+          { href: '/invest',   icon: TrendingUp,    label: 'Invest Surplus', sub: `${fmt(Math.max(0, 200 - monthlyLeak))}/mo available`,            color: 'text-blue-400',     bg: 'bg-blue-500/10',         border: 'hover:border-blue-400/30'     },
+        ].map(({ href, icon: Icon, label, sub, color, bg, border }) => (
           <Link key={href} href={href}>
-            <div className="keeper-card p-4 hover:border-keeper-green/30 transition-colors cursor-pointer">
+            <div className={`glass-card p-4 ${border} transition-all cursor-pointer card-3d`}>
               <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mb-3`}>
                 <Icon size={18} className={color} />
               </div>
@@ -97,14 +104,14 @@ export default function DashboardPage() {
           <div className="space-y-2">
             {topIssues.map((issue) => (
               <Link key={issue.id} href={`/findings/${issue.id}`}>
-                <div className="keeper-card px-4 py-3.5 flex items-center gap-4 hover:border-keeper-green/20 transition-colors cursor-pointer">
+                <div className="glass-card px-4 py-3.5 flex items-center gap-4 hover:border-keeper-green/25 transition-all cursor-pointer">
                   <div className="flex-1 min-w-0">
                     <p className="text-keeper-bright text-sm font-semibold truncate">{issue.merchant_name}</p>
                     <p className="text-keeper-muted text-xs mt-0.5 truncate">{issue.plain_english_explanation.slice(0, 70)}…</p>
                   </div>
                   <div className="text-right shrink-0">
                     <p className="text-keeper-red font-bold text-sm">{fmt2(issue.monthly_cost)}<span className="text-xs font-normal text-keeper-muted">/mo</span></p>
-                    <p className="keeper-label">{fmt(issue.annual_cost)}/yr</p>
+                    <p className="mono-label">{fmt(issue.annual_cost)}/yr</p>
                   </div>
                   <ChevronRight size={14} className="text-keeper-muted shrink-0" />
                 </div>
@@ -120,13 +127,13 @@ export default function DashboardPage() {
           <h2 className="text-keeper-bright font-semibold mb-3">Connected Accounts</h2>
           <div className="flex gap-3 flex-wrap">
             {DEMO_ACCOUNTS.map((account) => (
-              <div key={account.id} className="keeper-card px-4 py-3 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-keeper-green/10 flex items-center justify-center">
+              <div key={account.id} className="glass-card px-4 py-3 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-keeper-green/10 border border-keeper-green/20 flex items-center justify-center">
                   <Building2 size={15} className="text-keeper-green" />
                 </div>
                 <div>
                   <p className="text-keeper-bright text-sm font-medium">{account.institution_name}</p>
-                  <p className="keeper-label">{account.account_name} ••••{account.mask}</p>
+                  <p className="mono-label">{account.account_name} ••••{account.mask}</p>
                 </div>
               </div>
             ))}
