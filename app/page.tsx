@@ -1,336 +1,215 @@
 import Link from 'next/link';
 import { Shield, ChevronRight, Check, Zap, Brain, TrendingUp, MessageCircle, Search, Lock, ArrowRight } from 'lucide-react';
-import { ForceFieldBackground } from '@/components/ui/ForceFieldBackground';
-import { TiltCard }              from '@/components/ui/TiltCard';
-import { AnimatedCounter }       from '@/components/ui/AnimatedCounter';
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter';
 
-const ISSUES = [
-  { merchant: 'Adobe Creative Cloud', type: 'Forgotten Subscription', monthly: '$54.99', annual: '$659', color: 'text-keeper-red'  },
-  { merchant: 'Netflix',              type: 'Price Increase +48%',    monthly: '$22.99', annual: '$276', color: 'text-amber-400'   },
-  { merchant: 'Spotify',              type: 'Duplicate Charge',       monthly: '$10.99', annual: '$132', color: 'text-keeper-red'  },
+const FEATURES = [
+  { icon: Search,        title: 'Instant detection',         desc: 'Keeper scans 90 days of transactions in seconds and surfaces every subscription, price increase, and duplicate charge.' },
+  { icon: Brain,         title: 'Plain-English explanations', desc: 'Claude AI explains exactly what the issue is and gives you step-by-step instructions to fix it — no financial jargon.' },
+  { icon: TrendingUp,    title: 'Invest the difference',      desc: 'See what your reclaimed money becomes over 10, 20, or 30 years when you put it to work in index funds.' },
+  { icon: MessageCircle, title: 'Ask anything',               desc: 'Chat with Keeper AI about any transaction, account, or financial question — 24/7, always in context.' },
+  { icon: Lock,          title: 'Read-only security',         desc: 'We connect via Plaid with read-only access. We cannot move money, ever. Your credentials never touch our servers.' },
+  { icon: Shield,        title: 'Private by design',          desc: 'Bank-grade encryption at rest and in transit. Disconnect any account instantly. Your data is never sold.' },
 ];
 
-const PROJECTIONS = [
-  { yr: '1yr',  pct: 15  },
-  { yr: '5yr',  pct: 35  },
-  { yr: '10yr', pct: 55  },
-  { yr: '20yr', pct: 78  },
-  { yr: '30yr', pct: 100 },
+const STEPS = [
+  { n: '1', title: 'Connect your bank',    body: 'Securely link via Plaid. Read-only access — we cannot move money.' },
+  { n: '2', title: 'AI scans everything',  body: 'Claude analyzes 90 days of transactions and ranks issues by dollar impact.' },
+  { n: '3', title: 'Fix with one click',   body: 'Get exact steps to cancel, negotiate, or dispute every issue Keeper finds.' },
+];
+
+const ISSUES = [
+  { name: 'Adobe Creative Cloud', type: 'Forgotten subscription', amount: '$659/yr', hot: true  },
+  { name: 'Netflix',              type: 'Price increase +48%',    amount: '$276/yr', hot: false },
+  { name: 'Spotify',              type: 'Duplicate charge',        amount: '$132/yr', hot: true  },
 ];
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen bg-keeper-void overflow-hidden text-keeper-text">
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 antialiased">
 
-      {/* ── ForceField full-page background ────────────── */}
-      <ForceFieldBackground spacing={14} forceRadius={220} forceStrength={16} />
-
-      {/* Subtle grid overlay */}
-      <div className="fixed inset-0 bg-grid pointer-events-none z-1 opacity-40" />
-
-      {/* Full-page scan line */}
-      <div className="scan-line z-20" style={{ top: 0, position: 'fixed' }} />
-
-      {/* ── Floating Nav ───────────────────────────────── */}
-      <div className="relative z-50 flex justify-center pt-5 px-6">
-        <nav className="glass-card flex items-center justify-between px-6 py-3 rounded-2xl w-full max-w-5xl">
-          <div className="flex items-center gap-2.5">
-            <div className="relative">
-              <div className="absolute inset-0 rounded-xl bg-keeper-green/40 blur-lg" />
-              <div className="relative w-9 h-9 rounded-xl bg-keeper-green flex items-center justify-center shadow-glow-green">
-                <span className="text-keeper-void font-black text-xs">K</span>
-              </div>
+      {/* ── Nav ─────────────────────────────────────────── */}
+      <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#09090b]/90 backdrop-blur-md">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-[#00e87a] flex items-center justify-center">
+              <span className="text-black font-black text-xs">K</span>
             </div>
-            <span className="text-keeper-bright font-bold tracking-wide text-lg">Keeper</span>
+            <span className="font-semibold text-white tracking-tight">Keeper</span>
           </div>
+          <nav className="hidden md:flex items-center gap-8 text-sm text-zinc-400">
+            <Link href="/dashboard" className="hover:text-white transition-colors duration-150">Features</Link>
+            <Link href="/dashboard" className="hover:text-white transition-colors duration-150">Security</Link>
+            <Link href="/dashboard" className="hover:text-white transition-colors duration-150">Pricing</Link>
+          </nav>
           <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="text-keeper-text hover:text-keeper-bright text-sm font-medium transition-colors duration-200">Sign In</Link>
-            <Link href="/dashboard" className="btn-primary btn-sm flex items-center gap-1.5">
-              Get Started <ChevronRight size={13} />
+            <Link href="/dashboard" className="text-sm text-zinc-400 hover:text-white transition-colors duration-150">Sign in</Link>
+            <Link href="/dashboard" className="h-8 px-4 rounded-lg bg-white text-black text-sm font-semibold hover:bg-zinc-100 transition-colors duration-150 flex items-center gap-1.5">
+              Get started <ChevronRight size={13} />
             </Link>
           </div>
-        </nav>
-      </div>
+        </div>
+      </header>
 
-      {/* ── Bento Grid ─────────────────────────────────── */}
-      <section className="relative z-10 max-w-5xl mx-auto px-6 pt-8 pb-24">
-        <div className="grid grid-cols-3 gap-4">
+      {/* ── Hero ────────────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-6 pt-28 pb-24 text-center">
+        <div className="inline-flex items-center gap-2 border border-white/10 rounded-full px-4 py-1.5 mb-10 text-xs text-zinc-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00e87a] animate-pulse" />
+          Powered by Claude AI · Read-only bank access
+        </div>
 
-          {/* ── HERO — full width ──────────────────────── */}
-          <div className="col-span-3 glass-card card-glow-border relative overflow-hidden px-10 py-16 text-center">
-            <div className="scan-line top-0" />
+        <h1 className="text-6xl md:text-7xl lg:text-[5.5rem] font-black tracking-tight text-white leading-[0.93] mb-8 max-w-4xl mx-auto">
+          Stop paying for<br />
+          <span style={{ color: '#00e87a' }}>things you forgot.</span>
+        </h1>
 
-            <div className="relative">
-              <div className="inline-flex items-center gap-2 bg-keeper-green/12 border border-keeper-green/30 px-4 py-1.5 rounded-full mb-8">
-                <span className="w-1.5 h-1.5 rounded-full bg-keeper-green animate-pulse" />
-                <span className="text-keeper-green text-xs font-semibold tracking-widest uppercase">AI-powered money intelligence</span>
-              </div>
+        <p className="text-lg text-zinc-400 max-w-lg mx-auto mb-10 leading-relaxed">
+          Keeper scans your accounts, finds every dollar you&apos;re wasting on forgotten
+          subscriptions and overcharges, then tells you exactly how to get it back.
+        </p>
 
-              <h1 className="text-[3.75rem] font-black text-keeper-bright leading-[1.05] mb-5 max-w-2xl mx-auto">
-                Stop losing money to<br />
-                <span className="gradient-text">forgotten subscriptions</span>
-              </h1>
+        <div className="flex items-center justify-center gap-3 mb-24 flex-wrap">
+          <Link href="/dashboard" className="h-12 px-8 rounded-xl bg-[#00e87a] text-black font-semibold text-sm flex items-center gap-2 hover:bg-[#00e87a]/90 transition-colors duration-150 cursor-pointer">
+            <Zap size={15} /> Start free scan
+          </Link>
+          <Link href="/dashboard" className="h-12 px-8 rounded-xl border border-white/10 text-zinc-300 text-sm font-medium flex items-center gap-2 hover:border-white/20 hover:text-white transition-all duration-150 cursor-pointer">
+            View demo <ArrowRight size={14} />
+          </Link>
+        </div>
 
-              <p className="text-keeper-text text-lg leading-relaxed mb-10 max-w-xl mx-auto">
-                Keeper scans your accounts, finds every dollar you&apos;re wasting, and tells you exactly how to get it back — powered by Claude AI.
-              </p>
-
-              <div className="flex items-center justify-center gap-4 mb-10 flex-wrap">
-                <Link href="/dashboard" className="btn-primary flex items-center gap-2 text-base px-8 py-4">
-                  <Zap size={17} /> Start for free
-                </Link>
-                <Link href="/dashboard" className="btn-ghost flex items-center gap-2 text-base px-8 py-4">
-                  See a demo <ArrowRight size={15} />
-                </Link>
-              </div>
-
-              <div className="flex items-center justify-center gap-10 flex-wrap">
-                {[
-                  { label: 'Avg savings found', value: 1067, prefix: '$', suffix: '/yr' },
-                  { label: 'AI confidence',      value: 98,   prefix: '',  suffix: '%'   },
-                  { label: 'Setup time',         value: 2,    prefix: '',  suffix: ' min' },
-                ].map(({ label, value, prefix, suffix }) => (
-                  <div key={label} className="text-center">
-                    <p className="text-keeper-bright font-black text-2xl glow-text">
-                      <AnimatedCounter value={value} prefix={prefix} suffix={suffix} />
-                    </p>
-                    <p className="mono-label mt-0.5">{label}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* Giant hero stat */}
+        <div>
+          <div className="text-[clamp(5rem,16vw,10.5rem)] font-black text-white leading-none tracking-tighter tabular-nums">
+            $<AnimatedCounter value={1067} duration={2200} />
           </div>
-
-          {/* ── LIVE SCAN — 2 cols ─────────────────────── */}
-          <TiltCard className="col-span-2 glass-card-glow relative overflow-hidden p-7">
-            <div className="orb w-64 h-64 bg-keeper-green/25 -top-16 -right-16" />
-            <div className="scan-line top-0" />
-            <div className="relative">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-keeper-green animate-pulse" />
-                  <span className="mono-label text-keeper-green/80">Live scan · issues detected</span>
-                </div>
-                <span className="mono-label">DEMO</span>
-              </div>
-
-              <div className="mb-5">
-                <p className="mono-label mb-1">Potential annual savings</p>
-                <p className="text-5xl font-black glow-text">
-                  $<AnimatedCounter value={1067} duration={2000} />
-                  <span className="text-xl font-normal text-keeper-muted">/yr</span>
-                </p>
-              </div>
-
-              <div className="space-y-2.5">
-                {ISSUES.map((issue) => (
-                  <div key={issue.merchant} className="glass-card px-4 py-3.5 flex items-center justify-between">
-                    <div>
-                      <p className="text-keeper-bright font-semibold text-sm">{issue.merchant}</p>
-                      <p className="mono-label mt-0.5">{issue.type}</p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className={`font-bold text-sm ${issue.color}`}>{issue.monthly}<span className="text-xs font-normal text-keeper-muted">/mo</span></p>
-                      <p className="text-keeper-green text-xs font-semibold">Save {issue.annual}/yr</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </TiltCard>
-
-          {/* ── BIG NUMBER — 1 col ────────────────────── */}
-          <TiltCard className="glass-card relative overflow-hidden p-7 flex flex-col justify-between">
-            <div className="orb w-48 h-48 bg-keeper-green/30 -bottom-12 -right-12" />
-            <div className="relative">
-              <Search size={22} className="text-keeper-green mb-4" />
-              <p className="mono-label mb-2">Found for users</p>
-              <p className="text-5xl font-black glow-text leading-none mb-1">
-                $<AnimatedCounter value={1067} duration={2200} />
-              </p>
-              <p className="text-keeper-muted text-sm">per year on average</p>
-            </div>
-            <div className="relative mt-6 pt-4 border-t border-keeper-border/50">
-              <div className="flex items-center gap-2">
-                <Check size={13} className="text-keeper-green" />
-                <span className="text-keeper-text text-xs">Free to get started</span>
-              </div>
-            </div>
-          </TiltCard>
-
-          {/* ── AI POWERED — 1 col ────────────────────── */}
-          <TiltCard className="glass-card relative overflow-hidden p-6">
-            <div className="orb w-40 h-40 bg-keeper-blue/25 -top-10 -right-10" />
-            <div className="relative">
-              <div className="relative mb-4 w-12 h-12">
-                <div className="absolute inset-0 rounded-2xl bg-keeper-green/30 blur-xl animate-glow-pulse" />
-                <div className="relative w-12 h-12 rounded-2xl bg-keeper-green/12 border border-keeper-green/30 flex items-center justify-center">
-                  <Brain size={22} className="text-keeper-green" />
-                </div>
-              </div>
-              <h3 className="text-keeper-bright font-bold text-lg mb-2">AI-Powered Analysis</h3>
-              <p className="text-keeper-text text-sm leading-relaxed">
-                Claude AI explains every issue in plain English and tells you exactly what to do.
-              </p>
-              <div className="mt-4 inline-flex items-center gap-1.5 bg-keeper-green/10 border border-keeper-green/25 rounded-full px-3 py-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-keeper-green animate-pulse" />
-                <span className="text-keeper-green text-xs font-semibold">Powered by Claude</span>
-              </div>
-            </div>
-          </TiltCard>
-
-          {/* ── INVEST — 1 col ────────────────────────── */}
-          <TiltCard className="glass-card relative overflow-hidden p-6">
-            <div className="orb w-40 h-40 bg-keeper-purple/20 -bottom-10 -left-10" />
-            <div className="relative">
-              <TrendingUp size={20} className="text-keeper-green mb-4" />
-              <h3 className="text-keeper-bright font-bold text-lg mb-4">Investment Projections</h3>
-              <div className="flex items-end gap-1.5 h-20 mb-3">
-                {PROJECTIONS.map((p) => (
-                  <div key={p.yr} className="flex-1 flex flex-col items-center justify-end">
-                    <div
-                      className="w-full rounded-t-md bg-gradient-to-t from-keeper-green/50 to-keeper-green animate-float"
-                      style={{ height: `${p.pct}%`, animationDelay: `${PROJECTIONS.indexOf(p) * 0.2}s` }}
-                    />
-                  </div>
-                ))}
-              </div>
-              <div className="flex gap-1.5">
-                {PROJECTIONS.map((p) => (
-                  <div key={p.yr} className="flex-1 text-center mono-label" style={{ fontSize: '0.48rem' }}>{p.yr}</div>
-                ))}
-              </div>
-              <p className="text-keeper-green font-black text-xl mt-3">
-                $272K <span className="text-xs font-normal text-keeper-muted">in 30yr</span>
-              </p>
-            </div>
-          </TiltCard>
-
-          {/* ── CHAT — 1 col ──────────────────────────── */}
-          <TiltCard className="glass-card relative overflow-hidden p-6">
-            <div className="orb w-36 h-36 bg-keeper-blue/20 -top-8 -right-8" />
-            <div className="relative">
-              <MessageCircle size={20} className="text-keeper-green mb-4" />
-              <h3 className="text-keeper-bright font-bold text-lg mb-4">Ask AI Anything</h3>
-              <div className="space-y-2.5">
-                <div className="flex gap-2 items-end">
-                  <div className="w-6 h-6 rounded-full bg-keeper-green/20 border border-keeper-green/30 flex items-center justify-center shrink-0">
-                    <span className="text-keeper-green font-black" style={{ fontSize: '0.5rem' }}>K</span>
-                  </div>
-                  <div className="glass-card px-3 py-2 rounded-2xl rounded-bl-sm text-xs text-keeper-text max-w-[160px]">
-                    What&apos;s my biggest money leak?
-                  </div>
-                </div>
-                <div className="flex gap-2 items-end justify-end">
-                  <div className="bg-keeper-green/10 border border-keeper-green/25 px-3 py-2 rounded-2xl rounded-br-sm text-xs text-keeper-bright max-w-[175px]">
-                    Adobe at $54.99/mo — cancel in 2 min to save $659/yr.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TiltCard>
-
-          {/* ── SECURITY — 2 cols ─────────────────────── */}
-          <TiltCard className="col-span-2 glass-card relative overflow-hidden p-7">
-            <div className="orb w-56 h-56 bg-keeper-blue/20 -bottom-14 -right-14" />
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-11 h-11 rounded-xl bg-keeper-green/12 border border-keeper-green/25 flex items-center justify-center">
-                  <Lock size={18} className="text-keeper-green" />
-                </div>
-                <div>
-                  <h3 className="text-keeper-bright font-bold text-lg">Bank-level security</h3>
-                  <p className="mono-label">Your data is always protected</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  'Keeper never stores your bank login credentials',
-                  'All data encrypted in transit and at rest',
-                  'Read-only access — we cannot move your money',
-                  'Disconnect any account instantly, at any time',
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-2.5">
-                    <div className="w-5 h-5 rounded-full bg-keeper-green/12 border border-keeper-green/25 flex items-center justify-center shrink-0 mt-0.5">
-                      <Check size={10} className="text-keeper-green" />
-                    </div>
-                    <p className="text-keeper-text text-sm leading-snug">{item}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </TiltCard>
-
-          {/* ── HOW IT WORKS — 1 col ──────────────────── */}
-          <TiltCard className="glass-card relative overflow-hidden p-6">
-            <div className="relative">
-              <p className="mono-label text-keeper-green/70 mb-5">HOW IT WORKS</p>
-              <div className="space-y-5">
-                {[
-                  { n: '01', title: 'Connect',  body: 'Securely link your bank via Plaid. Read-only.' },
-                  { n: '02', title: 'Scan',     body: 'AI analyzes 90 days of transactions instantly.' },
-                  { n: '03', title: 'Act',      body: 'Get ranked issues with exact steps to fix them.' },
-                ].map(({ n, title, body }, i) => (
-                  <div key={n} className="flex gap-3">
-                    <div className="flex flex-col items-center">
-                      <div className="w-7 h-7 rounded-full border border-keeper-green/35 bg-keeper-green/10 flex items-center justify-center shrink-0">
-                        <span className="mono-label text-keeper-green" style={{ fontSize: '0.48rem' }}>{n}</span>
-                      </div>
-                      {i < 2 && <div className="w-px flex-1 bg-gradient-to-b from-keeper-green/30 to-transparent mt-1" />}
-                    </div>
-                    <div className="pb-4">
-                      <p className="text-keeper-bright font-semibold text-sm">{title}</p>
-                      <p className="text-keeper-muted text-xs leading-relaxed mt-0.5">{body}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </TiltCard>
-
-          {/* ── CTA — full width ──────────────────────── */}
-          <div className="col-span-3 glass-card-glow card-glow-border relative overflow-hidden px-10 py-14 text-center">
-            <div className="scan-line top-0" />
-            <div className="relative">
-              <p className="mono-label text-keeper-green/70 mb-4">GET STARTED TODAY</p>
-              <h2 className="text-4xl font-black text-keeper-bright mb-3 leading-tight">
-                Start saving <span className="gradient-text">immediately</span>
-              </h2>
-              <p className="text-keeper-text mb-8 max-w-md mx-auto">
-                Most users find over <span className="text-keeper-green font-semibold">$500/year</span> in their very first scan. Takes under 2 minutes.
-              </p>
-              <Link href="/dashboard" className="btn-primary text-base px-10 py-4 inline-flex items-center gap-2">
-                <Zap size={17} /> Get started for free
-              </Link>
-              <div className="flex items-center justify-center gap-6 mt-6 flex-wrap">
-                {['No credit card', 'Free forever', 'Cancel anytime'].map((t) => (
-                  <div key={t} className="flex items-center gap-1.5 text-keeper-muted text-xs">
-                    <Check size={11} className="text-keeper-green" />
-                    <span>{t}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
+          <p className="text-zinc-500 text-lg mt-3">average saved per user, per year</p>
         </div>
       </section>
 
-      {/* ── Footer ─────────────────────────────────────── */}
-      <footer className="relative z-10 border-t border-keeper-border/40 py-7 bg-keeper-void/80 backdrop-blur-sm">
-        <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="relative">
-              <div className="absolute inset-0 rounded bg-keeper-green/25 blur-sm" />
-              <div className="relative w-6 h-6 rounded bg-keeper-green flex items-center justify-center">
-                <span className="text-keeper-void font-black text-xs">K</span>
+      {/* ── Stats row ───────────────────────────────────── */}
+      <section className="border-y border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 py-14 grid grid-cols-3 divide-x divide-white/[0.06]">
+          {[
+            { value: 1067, prefix: '$', suffix: '/yr', label: 'average savings found'  },
+            { value: 98,   prefix: '',  suffix: '%',   label: 'AI accuracy rate'        },
+            { value: 2,    prefix: '',  suffix: ' min', label: 'to complete first scan' },
+          ].map(({ value, prefix, suffix, label }) => (
+            <div key={label} className="text-center px-8">
+              <p className="text-4xl font-black text-white tabular-nums mb-1">
+                <AnimatedCounter value={value} prefix={prefix} suffix={suffix} duration={1800} />
+              </p>
+              <p className="text-sm text-zinc-500">{label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Features ────────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-6 py-28">
+        <div className="mb-16 max-w-xl">
+          <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#00e87a' }}>What Keeper does</p>
+          <h2 className="text-4xl font-black text-white tracking-tight leading-tight">
+            Every dollar you&apos;re losing, found.
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/[0.06]">
+          {FEATURES.map(({ icon: Icon, title, desc }) => (
+            <div key={title} className="bg-[#09090b] p-8 hover:bg-white/[0.025] transition-colors duration-200 cursor-default">
+              <Icon size={20} className="mb-5" style={{ color: '#00e87a' }} />
+              <h3 className="text-white font-semibold mb-2">{title}</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── How it works ────────────────────────────────── */}
+      <section className="border-t border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 py-28 grid md:grid-cols-2 gap-20 items-center">
+          <div>
+            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#00e87a' }}>How it works</p>
+            <h2 className="text-4xl font-black text-white tracking-tight leading-tight mb-10">
+              Under 2 minutes<br />start to finish.
+            </h2>
+            <div className="space-y-8">
+              {STEPS.map(({ n, title, body }, i) => (
+                <div key={n} className="flex gap-5">
+                  <div className="flex flex-col items-center gap-2 shrink-0">
+                    <div className="w-8 h-8 rounded-full border border-white/15 flex items-center justify-center text-xs font-bold text-zinc-500">
+                      {n}
+                    </div>
+                    {i < STEPS.length - 1 && <div className="w-px h-8 bg-white/[0.06]" />}
+                  </div>
+                  <div className="pt-1">
+                    <p className="text-white font-semibold mb-1">{title}</p>
+                    <p className="text-sm text-zinc-500 leading-relaxed">{body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Mock scan card */}
+          <div className="border border-white/[0.08] rounded-2xl overflow-hidden">
+            <div className="border-b border-white/[0.06] px-5 py-3.5 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#00e87a] animate-pulse" />
+              <span className="text-xs text-zinc-500 font-mono">Keeper · live scan</span>
+            </div>
+            <div className="p-6">
+              <p className="text-xs text-zinc-600 mb-1 font-mono uppercase tracking-wider">Annual savings available</p>
+              <p className="text-5xl font-black text-white mb-6 tabular-nums">$1,067</p>
+              <div className="space-y-0">
+                {ISSUES.map((item) => (
+                  <div key={item.name} className="flex items-center justify-between py-3.5 border-b border-white/[0.05] last:border-0">
+                    <div>
+                      <p className="text-sm text-white font-medium">{item.name}</p>
+                      <p className="text-xs text-zinc-600 mt-0.5">{item.type}</p>
+                    </div>
+                    <span className={`text-sm font-semibold ${item.hot ? 'text-red-400' : 'text-amber-400'}`}>
+                      {item.amount}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
-            <span className="text-keeper-muted text-sm">Keeper · Powered by Claude AI</span>
           </div>
-          <div className="flex items-center gap-6 text-keeper-muted text-xs">
-            <Link href="#" className="hover:text-keeper-bright transition-colors duration-200">Privacy</Link>
-            <Link href="#" className="hover:text-keeper-bright transition-colors duration-200">Terms</Link>
+        </div>
+      </section>
+
+      {/* ── CTA ─────────────────────────────────────────── */}
+      <section className="border-t border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 py-32 text-center">
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[0.93] mb-6">
+            Your money is<br />waiting for you.
+          </h2>
+          <p className="text-zinc-500 mb-10 max-w-sm mx-auto leading-relaxed">
+            Most users find over $500/year in their first scan. Takes under 2 minutes.
+          </p>
+          <Link href="/dashboard" className="inline-flex h-12 px-10 rounded-xl bg-[#00e87a] text-black font-semibold text-sm items-center gap-2 hover:bg-[#00e87a]/90 transition-colors duration-150 cursor-pointer">
+            <Zap size={15} /> Start your free scan
+          </Link>
+          <div className="flex items-center justify-center gap-8 mt-8 flex-wrap">
+            {['No credit card required', 'Free forever', 'Cancel anytime'].map((t) => (
+              <div key={t} className="flex items-center gap-2 text-xs text-zinc-600">
+                <Check size={12} style={{ color: '#00e87a' }} />
+                {t}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ──────────────────────────────────────── */}
+      <footer className="border-t border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded bg-[#00e87a] flex items-center justify-center">
+              <span className="text-black font-black" style={{ fontSize: '0.48rem' }}>K</span>
+            </div>
+            <span className="text-zinc-600 text-sm">Keeper · Powered by Claude AI</span>
+          </div>
+          <div className="flex items-center gap-6 text-zinc-600 text-xs">
+            <Link href="#" className="hover:text-zinc-400 transition-colors duration-150">Privacy</Link>
+            <Link href="#" className="hover:text-zinc-400 transition-colors duration-150">Terms</Link>
             <span>© 2026 Keeper</span>
           </div>
         </div>
